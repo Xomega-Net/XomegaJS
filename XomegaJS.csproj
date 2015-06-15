@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{F83F0E07-7DC9-455C-BC90-F3924AADBD29}</ProjectGuid>
+    <ProjectTypeGuids>{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <OutputPath>bin</OutputPath>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <TypeScriptToolsVersion>1.4</TypeScriptToolsVersion>
+    <TypeScriptCompileOnSaveEnabled>false</TypeScriptCompileOnSaveEnabled>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\Users\Admin\documents\visual studio 2012\Projects\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>XomegaJS</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyName>1.0.0</AssemblyName>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions />
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <OutputPath>bin\</OutputPath>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+    <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
+    <TypeScriptGeneratesDeclarations>true</TypeScriptGeneratesDeclarations>
+    <TypeScriptOutFile>$(OutputPath)xomega.js</TypeScriptOutFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <OutputPath>bin\</OutputPath>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptRemoveComments>true</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+    <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
+    <TypeScriptGeneratesDeclarations>true</TypeScriptGeneratesDeclarations>
+    <TypeScriptOutFile>$(OutputPath)xomega.js</TypeScriptOutFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Scripts\jquery-2.1.3.intellisense.js" />
+    <Content Include="Scripts\jquery-2.1.3.js" />
+    <Content Include="Scripts\jquery-2.1.3.min.js" />
+    <Content Include="Scripts\knockout-3.3.0.debug.js" />
+    <Content Include="Scripts\knockout-3.3.0.js" />
+    <Content Include="Scripts\moment-with-locales.js" />
+    <Content Include="Scripts\moment-with-locales.min.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\moment.min.js" />
+    <None Include="Scripts\jquery-2.1.3.min.map" />
+    <TypeScriptCompile Include="DataObjects\CriteriaObject.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\knockout\knockout.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\moment\moment.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\requirejs\require.d.ts" />
+    <TypeScriptCompile Include="Utils\ErrorList.ts" />
+    <TypeScriptCompile Include="Utils\ErrorMessage.ts" />
+    <TypeScriptCompile Include="Utils\ErrorSeverity.ts" />
+    <TypeScriptCompile Include="Utils\StringUtils.ts" />
+    <TypeScriptCompile Include="Lookup\Header.ts" />
+    <TypeScriptCompile Include="Lookup\ILookupCacheLoader.ts" />
+    <TypeScriptCompile Include="Lookup\LookupCache.ts" />
+    <TypeScriptCompile Include="Lookup\LookupTable.ts" />
+    <TypeScriptCompile Include="Lookup\XomegaCacheLoader.ts" />
+    <None Include="Lookup\BaseLookupCacheLoader.ts" />
+    <TypeScriptCompile Include="DataObjects\BaseProperty.ts" />
+    <TypeScriptCompile Include="DataObjects\IInitializable.ts" />
+    <TypeScriptCompile Include="DataObjects\IValidatable.ts" />
+    <TypeScriptCompile Include="DataObjects\IModifiable.ts" />
+    <TypeScriptCompile Include="DataObjects\IDataObject.ts" />
+    <TypeScriptCompile Include="DataObjects\IDataObjectList.ts" />
+    <TypeScriptCompile Include="DataObjects\AccessLevel.ts" />
+    <TypeScriptCompile Include="DataObjects\ValueFormat.ts" />
+    <TypeScriptCompile Include="DataObjects\DataProperty.ts" />
+    <TypeScriptCompile Include="DataObjects\DataObject.ts" />
+    <TypeScriptCompile Include="DataObjects\DataListObject.ts" />
+    <TypeScriptCompile Include="DataObjects\DataObjectList.ts" />
+    <TypeScriptCompile Include="Binding\Bindings.ts" />
+    <TypeScriptCompile Include="Binding\PropertyBinding.ts" />
+    <TypeScriptCompile Include="Binding\OutputTextBinding.ts" />
+    <TypeScriptCompile Include="Binding\InputTextBinding.ts" />
+    <TypeScriptCompile Include="Binding\CheckboxBinding.ts" />
+    <TypeScriptCompile Include="Binding\SelectBinding.ts" />
+    <TypeScriptCompile Include="Binding\OptionsBinding.ts" />
+    <TypeScriptCompile Include="DataProperties\EnumProperty.ts" />
+    <TypeScriptCompile Include="DataProperties\OperatorProperty.ts" />
+    <TypeScriptCompile Include="DataProperties\TextProperty.ts" />
+    <TypeScriptCompile Include="DataProperties\BooleanProperty.ts" />
+    <TypeScriptCompile Include="DataProperties\DecimalProperty.ts" />
+    <TypeScriptCompile Include="DataProperties\MoneyProperty.ts" />
+    <TypeScriptCompile Include="DataProperties\IntegerProperty.ts" />
+    <TypeScriptCompile Include="DataProperties\DateTimeProperty.ts" />
+    <TypeScriptCompile Include="DataProperties\DateProperty.ts" />
+    <TypeScriptCompile Include="DataProperties\TimeProperty.ts" />
+    <None Include="pkg\Package.nuspec" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <TypeScriptCompile Include="module.ts" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <PropertyGroup>
+    <PostBuildEvent>if $(ConfigurationName) == Release (
+  if exist "$(SolutionDir)pkg\content\" rd /q /s "$(SolutionDir)pkg\content"
+  xcopy "$(TargetDir)xomega.d.ts" "$(SolutionDir)pkg\content\Scripts\typings\xomegajs\" &gt;nul
+  if exist "$(SolutionDir)pkg\XomegaJS.$(AssemblyName)" rd /q /s "$(SolutionDir)pkg\XomegaJS.$(AssemblyName)"
+  mkdir "$(SolutionDir)pkg\XomegaJS.$(AssemblyName)"
+  copy "$(TargetDir)xomega.js" "$(SolutionDir)pkg\content\Scripts\xomega-$(AssemblyName).js" &gt;nul
+  $(SolutionDir)\.nuget\nuget.exe pack "$(SolutionDir)pkg\Package.nuspec" -OutputDirectory "$(SolutionDir)pkg\XomegaJS.$(AssemblyName)"
+)</PostBuildEvent>
+  </PropertyGroup>
+</Project>

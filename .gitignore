@@ -1,0 +1,7 @@
+.nuget
+bin
+obj
+packages
+Scripts
+*.suo
+*.user
