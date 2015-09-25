@@ -7,6 +7,8 @@ across the application, which is especially valuable for large scale SPA project
 XomegaJS uses Knockout, JQuery and other popular JavaScript frameworks to deliver highest quality functionality
 and speed up application development.
 
+[Watch our video](https://www.youtube.com/watch?v=g3ON1tPE_xk) to see how Xomega.Net for Visaul Studio uses XomegaJS framework to quickly generate a complete professional HTML5 single page application in just several minutes.
+
 ## XomegaJS Highlights
 
 XomegaJS provides Type Script implementation for most of the features found in the [Xomega Framework](http://xomfwk.codeplex.com) 
