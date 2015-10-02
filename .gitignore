@@ -5,3 +5,4 @@ packages
 Scripts
 *.suo
 *.user
+*.nupkg

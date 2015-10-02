@@ -25,7 +25,7 @@
     <RootNamespace>XomegaJS</RootNamespace>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyName>1.0.0</AssemblyName>
+    <AssemblyName>1.0.1</AssemblyName>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions />
