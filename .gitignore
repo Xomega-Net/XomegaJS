@@ -2,7 +2,11 @@
 bin
 obj
 packages
+pkg
 Scripts
 *.suo
 *.user
 *.nupkg
+*.d.ts
+*.js.map
+*.js
