@@ -108,6 +108,7 @@ module xomega {
         // reset the data property to the default value
         public reset(): void {
             this.InternalValue(null);
+            this.ValidationErrors.Errors.removeAll();
         }
 
         // Gets or sets whether the property contains multiple values (a list) or a single value.

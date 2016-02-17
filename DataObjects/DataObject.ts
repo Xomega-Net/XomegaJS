@@ -52,7 +52,7 @@ module xomega {
                 read: () => {
                     var res = this.modified();
                     for (var prop in this) {
-                        if ((<Object>this).hasOwnProperty(prop) && this[prop].Modified) {
+                        if ((<Object>this).hasOwnProperty(prop) && this[prop] && this[prop].Modified) {
                             var p: IModifiable = <IModifiable>this[prop];
                             if (p.Modified() != null) res = res || p.Modified();
                         }
@@ -63,7 +63,7 @@ module xomega {
                     this.modified(value);
                     if (value === false) {
                         for (var prop in this) {
-                            if ((<Object>this).hasOwnProperty(prop) && this[prop].Modified) {
+                            if ((<Object>this).hasOwnProperty(prop) && this[prop] && this[prop].Modified) {
                                 var p: IModifiable = <IModifiable>this[prop];
                                 p.Modified(false);
                             }
@@ -82,7 +82,7 @@ module xomega {
         // and child objects have been added and are therefore accessible.
         onInitialized(): void {
             for (var prop in this) {
-                if ((<Object>this).hasOwnProperty(prop) && this[prop].onInitialized) {
+                if ((<Object>this).hasOwnProperty(prop) && this[prop] && this[prop].onInitialized) {
                     var p: IInitializable = <IInitializable>this[prop];
                     p.setName(prop);
                     p.Parent(this);
@@ -200,7 +200,7 @@ module xomega {
 
             this.ValidationErrors.Errors.removeAll();
             for (var prop in this) {
-                if ((<Object>this).hasOwnProperty(prop) && this[prop].validate) {
+                if ((<Object>this).hasOwnProperty(prop) && this[prop] && this[prop].validate) {
                     var p: IValidatable = <IValidatable>this[prop];
                     p.validate(force);
                     this.ValidationErrors.mergeWith(p.ValidationErrors);
@@ -228,7 +228,7 @@ module xomega {
         // returns if the object, including all properties and child objects, is ready
         public isReady(): boolean {
             for (var prop in this) {
-                if ((<Object>this).hasOwnProperty(prop) && this[prop].isReady) {
+                if ((<Object>this).hasOwnProperty(prop) && this[prop] && this[prop].isReady) {
                     if (!this[prop].isReady()) return false;
                 }
             }

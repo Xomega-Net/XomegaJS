@@ -35,14 +35,22 @@ module xomega {
                     valueAccessor().NullString);
                 $(opt).appendTo(element).prop("selected", valueAccessor().isNull());
             }
+
             var vals = valueAccessor().PossibleValues();
+            var tvals = [];
             if (vals != null) {
                 ko.utils.arrayForEach(vals, (item) => {
                     var val = valueAccessor().convertValue(item, ValueFormat.Transport);
+                    tvals.push(val);
                     var opt = format(tmpl, val, valueAccessor().convertValue(item, ValueFormat.DisplayString));
                     var selected = valueAccessor().IsMultiValued ? value && ko.utils.arrayIndexOf(value, val) >= 0 : val == value;
                     $(opt).appendTo(element).prop("selected", selected);
                 });
+            }
+
+            if (!valueAccessor().IsMultiValued && !valueAccessor().isNull() && ko.utils.arrayIndexOf(tvals, value) < 0) {
+                var opt = xomega.format(tmpl, value, valueAccessor().convertValue(valueAccessor().InternalValue(), ValueFormat.DisplayString));
+                $(opt).appendTo(element).prop("selected", true).attr('disabled', 'disabled');
             }
         }
     }

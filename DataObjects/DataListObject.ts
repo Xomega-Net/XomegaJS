@@ -47,8 +47,6 @@ module xomega {
         // applied criteria
         public AppliedCriteria: KnockoutObservableArray<FieldCriteria> = ko.observableArray<FieldCriteria>();
 
-        private listModified: KnockoutObservable<boolean> = ko.observable<boolean>();
-
         // constructs a new data object list
         constructor() {
             super();
@@ -58,6 +56,7 @@ module xomega {
         public reset(): void {
             this.List.removeAll();
             this.AppliedCriteria(null);
+            this.Modified(null);
         }
 
         // initializes data object list's data from the specified JSON object
@@ -72,8 +71,8 @@ module xomega {
                 objects.push(dr);
             }
             this.List(objects);
-
             this.AppliedCriteria(this.CriteriaObject ? this.CriteriaObject.getFieldsCriteria() : []);
+            this.Modified(false);
         }
 
         // convert data object's data to a JSON object

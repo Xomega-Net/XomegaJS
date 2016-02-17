@@ -19,7 +19,7 @@ module xomega {
         };
 
         // JSON transport format
-        public static JsonFormat: string[] = ['YYYY-MM-DDTHH:mm:ss.SSS', 'YYYY-MM-DDTHH:mm:ss'];
+        public static JsonFormat: string[] = ['YYYY-MM-DDTHH:mm:ss.SSSSZ', 'YYYY-MM-DDTHH:mm:ss.SSS', 'YYYY-MM-DDTHH:mm:ss.SS', 'YYYY-MM-DDTHH:mm:ss.S', 'YYYY-MM-DDTHH:mm:ss'];
 
         // Custom date time edit format for this property
         public EditFormat: string;
