@@ -14,15 +14,12 @@ module xomega {
         public init(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
             super.init(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
 
-            if (valueAccessor().IsMultiValued) {
+            if (valueAccessor().IsMultiValued)
                 element.multiple = true;
-                ko.bindingHandlers.selectedOptions.init(element, () => valueAccessor().InternalValue,
-                    allBindingsAccessor, viewModel, bindingContext);
-            }
-            else {
-                ko.bindingHandlers.value.init(element, () => valueAccessor().InternalValue,
-                    allBindingsAccessor, viewModel, bindingContext);
-            }
+
+            $(element).change(function () {
+                valueAccessor().InternalValue($(this).val());
+            });
         }
 
         public handleValue(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {

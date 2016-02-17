@@ -2,17 +2,21 @@
 
 module xomega {
 
-    // property binding for a single or multiple select control
+    // property binding for an input control with auto suggest, based on HTML5 datalist
     export class AutoSuggestBinding extends PropertyBinding {
 
         public appliesTo(element, property): boolean {
-            if (element.tagName.toLowerCase() != "span") return false;
-            var $dl = $(element).children("datalist");
-            var $in = $(element).children("input");
-            return $dl.length == 1 && $in.length == 1 && (<any>$in[0]).type == "text";
+            return element.tagName.toLowerCase() == "span" && $(element).hasClass("autosuggest");
         }
 
         public init(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+            // add input and datalist elements to the span
+            var $e = $(element);
+            var listId = $e.attr("id") + "-list";
+            $("<datalist></datalist>", {"id": listId}).prependTo($e);
+            $("<input>", { "list": listId }).prependTo($e);
+
+            // init binding
             super.init(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
 
             ko.bindingHandlers.value.init($(element).children("input")[0], () => {
