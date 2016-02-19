@@ -5,20 +5,12 @@
         <version>{version}</version>
         <authors>Xomega Team</authors>
         <owners>Xomega.Net</owners>
-        <licenseUrl>http://www.xomega.net/</licenseUrl>
-        <projectUrl>http://www.xomega.net/</projectUrl>
-        <iconUrl>http://download.codeplex.com/Project/Download/Avatar.ashx?DownloadId=154241</iconUrl>
+        <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+        <projectUrl>https://github.com/Xomega-Net/XomegaJS</projectUrl>
+        <iconUrl>https://avatars2.githubusercontent.com/u/17077373</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Xomega JavaScript library for SPA projects, packaged along with typed definitions.</description>
         <tags>Xomega TypeScript JavaScript</tags>
-        <dependencies>
-            <dependency id="jQuery" version="2.1.3" />
-            <dependency id="jquery.TypeScript.DefinitelyTyped" version="2.1.4" />
-            <dependency id="knockout.TypeScript.DefinitelyTyped" version="0.6.7" />
-            <dependency id="knockoutjs" version="3.3.0" />
-            <dependency id="Moment.js" version="2.10.2" />
-            <dependency id="Moment.TypeScript.DefinitelyTyped" version="1.0.2" />
-            <dependency id="requirejs.TypeScript.DefinitelyTyped" version="0.2.0" />
-        </dependencies>
+        <dependencies />
     </metadata>
 </package>
