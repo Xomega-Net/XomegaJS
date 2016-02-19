@@ -61,17 +61,20 @@ module xomega {
                 },
                 write: (value: boolean) => {
                     this.modified(value);
-                    if (value === false) {
+                    if (value === false || value == null) {
                         for (var prop in this) {
                             if ((<Object>this).hasOwnProperty(prop) && this[prop] && this[prop].Modified) {
                                 var p: IModifiable = <IModifiable>this[prop];
-                                p.Modified(false);
+                                p.Modified(value);
                             }
                         }
                     }
                 },
                 owner: this
             });
+
+            // reset the Modified flag in case it changed during initialization
+            this.Modified(null);
         }
 
         // The abstract method to be implemented by the subclasses
