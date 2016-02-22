@@ -59,6 +59,14 @@ module xomega {
             this.Modified(null);
         }
 
+        // override validate to not call it on properties
+        public validate(force: boolean): void {
+            if (force) this.Validated = false;
+            if (this.Validated) return;
+            this.validateSelf();
+            this.Validated = true;
+        }
+
         // initializes data object list's data from the specified JSON object
         public fromJSON(obj) {
             if (!$.isArray(obj)) return;
