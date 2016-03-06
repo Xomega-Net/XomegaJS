@@ -61,17 +61,20 @@ module xomega {
                 },
                 write: (value: boolean) => {
                     this.modified(value);
-                    if (value === false) {
+                    if (value === false || value == null) {
                         for (var prop in this) {
                             if ((<Object>this).hasOwnProperty(prop) && this[prop] && this[prop].Modified) {
                                 var p: IModifiable = <IModifiable>this[prop];
-                                p.Modified(false);
+                                p.Modified(value);
                             }
                         }
                     }
                 },
                 owner: this
             });
+
+            // reset the Modified flag in case it changed during initialization
+            this.Modified(null);
         }
 
         // The abstract method to be implemented by the subclasses
@@ -155,14 +158,22 @@ module xomega {
             return url;
         }
 
-        public fromQueryDict(query: any) {
-            if (query) {
+        // triggers a callback for each property found in the query passing in the value from it
+        public processQueryDict(query: any, callback: (p: DataProperty, value: any) => void) {
+            if (query && callback) {
                 for (var key in query) {
                     var prop: DataProperty = <DataProperty>this[key];
                     if (prop)
-                        prop.InternalValue(query[key]);
+                        callback(prop, query[key]);
                 }
             }
+        }
+
+        // fills properties with values from a query
+        public fromQueryDict(query: any) {
+            this.processQueryDict(query, (p: DataProperty, value: any) => {
+                p.InternalValue(value);
+            });
         }
 
         public get Properties(): Array<BaseProperty> {
