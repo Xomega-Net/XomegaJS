@@ -158,14 +158,22 @@ module xomega {
             return url;
         }
 
-        public fromQueryDict(query: any) {
-            if (query) {
+        // triggers a callback for each property found in the query passing in the value from it
+        public processQueryDict(query: any, callback: (p: DataProperty, value: any) => void) {
+            if (query && callback) {
                 for (var key in query) {
                     var prop: DataProperty = <DataProperty>this[key];
                     if (prop)
-                        prop.InternalValue(query[key]);
+                        callback(prop, query[key]);
                 }
             }
+        }
+
+        // fills properties with values from a query
+        public fromQueryDict(query: any) {
+            this.processQueryDict(query, (p: DataProperty, value: any) => {
+                p.InternalValue(value);
+            });
         }
 
         public get Properties(): Array<BaseProperty> {
