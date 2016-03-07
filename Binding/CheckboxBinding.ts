@@ -16,6 +16,10 @@ module xomega {
             ko.bindingHandlers.checked.init(element, () => valueAccessor().DisplayStringValue,
                 allBindingsAccessor, viewModel, bindingContext);
         }
+
+        public handleValue(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+            $(element).prop("indeterminate", valueAccessor().isNull());
+        }
     }
     Bindings.register(new CheckboxBinding());
 }
