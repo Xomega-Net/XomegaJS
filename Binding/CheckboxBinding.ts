@@ -15,7 +15,7 @@ module xomega {
 
             $(element).click(function () {
                 if (valueAccessor().isNull()) valueAccessor().InternalValue(false);
-                else if (!valueAccessor().InternalValue()) valueAccessor().InternalValue(true)
+                else if (!valueAccessor().InternalValue()) valueAccessor().InternalValue(true);
                 else valueAccessor().InternalValue(valueAccessor().Required() ? false : null);
             });
         }
