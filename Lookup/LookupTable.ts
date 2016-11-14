@@ -69,7 +69,7 @@ module xomega {
             if (typeof tbl === "undefined")
                 tbl = this.buildIndexedTable(fmt);
             var res: Header = tbl[this.caseSensitive ? value : value.toUpperCase()];
-            if (res != null) return res.clone();
+            if (res != null) return res; // res.clone(); is safer, but worse performing
             return null;
         }
 

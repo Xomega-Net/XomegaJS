@@ -48,7 +48,6 @@ module xomega {
         public convertValue(value: any, outFormat: ValueFormat, inFormat?: ValueFormat): any {
             if (outFormat === ValueFormat.Internal) {
                 if (value instanceof Date) return value;
-                if (moment.isMoment(value)) return value.toDate();
                 if (this.isValueNull(value, outFormat)) return null;
                 if (inFormat === ValueFormat.Transport) {
                     // for optimal performance, transport format should be ISO-compliant to work well with native Date code
@@ -61,6 +60,7 @@ module xomega {
                         return value;
                 }
                 // if not from transport layer, the value is expected to be in edit format
+                if (moment.isMoment(value)) return value.toDate();
                 m = moment(value, this.EditFormat);
                 if (!m.isValid())
                     return value;

@@ -141,7 +141,7 @@ module xomega {
         // Subclasses can override this function to differentiate by the value format
         // or to provide different or additional rules.
         public isValueNull(value: any, format: ValueFormat): boolean {
-            if (value == null) return true;
+            if (value === null || typeof value === 'undefined') return true;
             if ($.isArray(value)) {
                 return value.length === 0;
             }
