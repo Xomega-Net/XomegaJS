@@ -152,19 +152,25 @@ module xomega {
         // Checks if the current property value is null.
         public isNull(): boolean { return this.isValueNull(this.value(), ValueFormat.Internal); }
 
+        // Sets new value for the property.
+        public setValue(value: any, format: ValueFormat) {
+            var newVal = this.resolveValue(value, ValueFormat.Internal, format);
+            this.value(newVal);
+        }
+
         // Resolves the given value or a list of values to the specified format based on the current property configuration.
         // If the property is restricted or the value is null and the format is string based,
-        // the <c> RestrictedString</c> or <c>NullString</c> are returned respectively.
+        // the <c>RestrictedString</c> or <c>NullString</c> are returned respectively.
         // If the property is multivalued it will try to convert the value to a list or parse it into a list if it's a string
         // or just add it to a new list as is and then convert each value in the list into the given format.
         // Otherwise it will try to convert the single value to the given format.
         // If a custom value converter is set on the property, it will be used first before the default property conversion rules are applied.
-        public resolveValue(value: any, format: ValueFormat): any {
+        public resolveValue(value: any, outFormat: ValueFormat, inFormat?: ValueFormat): any {
             if (this.AccessLevel() === AccessLevel.None)
-                return format == ValueFormat.DisplayString ? this.RestrictedString : value;
+                return outFormat == ValueFormat.DisplayString ? this.RestrictedString : value;
 
-            if (this.isValueNull(value, format))
-                return format == ValueFormat.DisplayString ? this.NullString : null;
+            if (this.isValueNull(value, outFormat))
+                return outFormat == ValueFormat.DisplayString ? this.NullString : null;
 
             if (this.IsMultiValued) {
                 var lst: Array<any>;
@@ -175,17 +181,17 @@ module xomega {
                     lst = lst.filter((str) => { return str !== "" });
                 }
                 else lst = [value];
-                lst = lst.map((val) => this.convertValue(val, format), this);
-                return this.convertList(lst, format);
+                lst = lst.map((val) => this.convertValue(val, outFormat), this);
+                return this.convertList(lst, outFormat);
             }
             else {
-                return this.convertValue(value, format);
+                return this.convertValue(value, outFormat, inFormat);
             }
         }
 
         // Converts a single value to a given format. The default implementation does nothing to the value,
         // but subclasses can implement the property specific rules for each format.
-        public convertValue(value: any, format: ValueFormat): any {
+        public convertValue(value: any, outFormat: ValueFormat, inFormat?: ValueFormat): any {
             return value;
         }
 

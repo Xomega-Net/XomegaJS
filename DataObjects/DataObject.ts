@@ -114,7 +114,7 @@ module xomega {
                 var dp = this[prop];
                 if ((<Object>obj).hasOwnProperty(prop) && dp) {
                     if (dp instanceof DataProperty) {
-                        dp.InternalValue(obj[prop]);
+                        dp.setValue(obj[prop], ValueFormat.Transport);
                         dp.Modified(false);
                     }
                     else if (dp instanceof DataObject) dp.fromJSON(obj[prop]);

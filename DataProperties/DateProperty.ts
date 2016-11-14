@@ -25,9 +25,9 @@ module xomega {
         // this method tries to convert various types of values to a Date.
         // For string formats it displays the internal Date formatted as date
         // according to the current locale and FormatOptions or the Format if set.
-        public convertValue(value: any, fmt: ValueFormat): any {
-            if (DataProperty.isTypedFormat(fmt)) {
-                var dt: Date = super.convertValue(value, fmt);
+        public convertValue(value: any, outFormat: ValueFormat, inFormat?: ValueFormat): any {
+            if (DataProperty.isTypedFormat(outFormat)) {
+                var dt: Date = super.convertValue(value, outFormat, inFormat);
                 if (dt instanceof Date) {
                     dt.setHours(0);
                     dt.setMinutes(0);
@@ -36,7 +36,7 @@ module xomega {
                 }
                 return dt;
             }
-            return super.convertValue(value, fmt);
+            return super.convertValue(value, outFormat, inFormat);
         }
     }
 }

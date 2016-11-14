@@ -18,7 +18,7 @@ module xomega {
             for (var prop in obj) {
                 var dp = this.List[prop];
                 if ((<Object>obj).hasOwnProperty(prop) && dp instanceof DataProperty) {
-                    this[prop] = dp.resolveValue(obj[prop], ValueFormat.Internal);
+                    this[prop] = dp.resolveValue(obj[prop], ValueFormat.Internal, ValueFormat.Transport);
                 }
             }
         }
