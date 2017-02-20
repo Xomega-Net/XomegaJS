@@ -4,6 +4,8 @@ module xomega {
 
     // Error severity possible values.
     export enum ErrorSeverity {
+        // Information message that can be displayed to the user.
+        Info,
 
         // A warning that may be displayed to the user for the confirmation before proceeding,
         // if supported by the current execution context.

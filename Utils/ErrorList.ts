@@ -23,7 +23,7 @@ module xomega {
         public static fromJSON(obj): ErrorList {
             var data: Array<ErrorMessage> = obj.Errors.map((val, idx, arr) => ErrorMessage.fromJSON(val));
             var lst: ErrorList = new ErrorList();
-            ko.utils.arrayPushAll(lst.Errors, data);
+            ko.utils.arrayPushAll<ErrorMessage>(lst.Errors, data);
             return lst;
         }
 
@@ -33,6 +33,7 @@ module xomega {
             if (json && json.Errors) return ErrorList.fromJSON(json);
             var errLst: ErrorList = new ErrorList();
             if (errLst.fromExceptionJSON(json)) return errLst;
+            if (errLst.fromOAuthError(json)) return errLst;
             errLst.Errors.push(new ErrorMessage(errorThrow, json && json.Message ? json.Message : (jqXHR.responseText ? jqXHR.responseText : errorThrow), ErrorSeverity.Error));
             return errLst;
         }
@@ -42,6 +43,15 @@ module xomega {
             if (json && json.ExceptionType) {
                 this.Errors.push(new ErrorMessage(json.ExceptionType, json.ExceptionMessage, ErrorSeverity.Error));
                 if (json.InnerException) this.fromExceptionJSON(json.InnerException);
+                return true;
+            }
+            return false;
+        }
+
+        // Populates the current error list from an OAuth error JSON returned by the server.
+        public fromOAuthError(json): boolean {
+            if (json && json.error && json.error_description) {
+                this.Errors.push(new ErrorMessage(json.error, json.error_description, ErrorSeverity.Error));
                 return true;
             }
             return false;
@@ -104,7 +114,7 @@ module xomega {
         // Merges the current list with another error list.
         public mergeWith(otherList: ErrorList) {
             if (otherList != null)
-                ko.utils.arrayPushAll(this.Errors, otherList.Errors());
+                ko.utils.arrayPushAll<ErrorMessage>(this.Errors, otherList.Errors());
         }
    }
 }

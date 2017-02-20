@@ -177,7 +177,7 @@ module xomega {
                 if ($.isArray(value)) lst = value;
                 else if (typeof value === "string") {
                     lst = value.split(this.ParseListSeparators);
-                    lst = lst.map((str) => { return ko.utils.stringTrim(str); });
+                    lst = lst.map((str) => { return str.trim(); });
                     lst = lst.filter((str) => { return str !== "" });
                 }
                 else lst = [value];
