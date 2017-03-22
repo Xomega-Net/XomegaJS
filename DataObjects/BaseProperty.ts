@@ -26,6 +26,9 @@ module xomega {
         // and therefore should be always checked for null.
         public Parent: KnockoutObservable<DataObject> = ko.observable<DataObject>();
 
+        // A flag indicating if this a key property within its parent data object
+        public IsKey: boolean;
+
         // Constructs a base property
         constructor() {
             // initialize computed observables in the constructor after the parent is set

@@ -1,5 +1,7 @@
 // Copyright (c) 2014 Xomega.Net. All rights reserved.
 
+/// <reference path="PropertyBinding.ts"/>
+
 module xomega {
 
     // property binding for a single checkbox

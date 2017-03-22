@@ -9,7 +9,7 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>2.2</TypeScriptToolsVersion>
     <TypeScriptCompileOnSaveEnabled>false</TypeScriptCompileOnSaveEnabled>
     <OldToolsVersion>4.0</OldToolsVersion>
     <UpgradeBackupLocation />
@@ -34,6 +34,14 @@
     <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
     <TypeScriptGeneratesDeclarations>true</TypeScriptGeneratesDeclarations>
     <TypeScriptOutFile>$(OutputPath)xomega.js</TypeScriptOutFile>
+    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptOutDir>
+    </TypeScriptOutDir>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <OutputPath>bin\</OutputPath>
@@ -52,9 +60,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="README.md" />
-    <None Include="Scripts\jquery-3.1.1.min.map" />
-    <None Include="Scripts\jquery-3.1.1.slim.min.map" />
-    <TypeScriptCompile Include="DataObjects\CriteriaObject.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\knockout\knockout.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\knockout\tests\jasmine.extensions.d.ts" />
@@ -63,6 +68,7 @@
     <TypeScriptCompile Include="Utils\ErrorList.ts" />
     <TypeScriptCompile Include="Utils\ErrorMessage.ts" />
     <TypeScriptCompile Include="Utils\ErrorSeverity.ts" />
+    <TypeScriptCompile Include="Utils\AuthManager.ts" />
     <TypeScriptCompile Include="Utils\StringUtils.ts" />
     <TypeScriptCompile Include="Lookup\Header.ts" />
     <TypeScriptCompile Include="Lookup\ILookupCacheLoader.ts" />
@@ -80,8 +86,11 @@
     <TypeScriptCompile Include="DataObjects\ValueFormat.ts" />
     <TypeScriptCompile Include="DataObjects\DataProperty.ts" />
     <TypeScriptCompile Include="DataObjects\DataObject.ts" />
+    <TypeScriptCompile Include="DataObjects\ListSortField.ts" />
+    <TypeScriptCompile Include="DataObjects\DataRow.ts" />
     <TypeScriptCompile Include="DataObjects\DataListObject.ts" />
     <TypeScriptCompile Include="DataObjects\DataObjectList.ts" />
+    <TypeScriptCompile Include="DataObjects\CriteriaObject.ts" />
     <TypeScriptCompile Include="Binding\Bindings.ts" />
     <TypeScriptCompile Include="Binding\PropertyBinding.ts" />
     <TypeScriptCompile Include="Binding\OutputTextBinding.ts" />
@@ -100,24 +109,18 @@
     <TypeScriptCompile Include="DataProperties\DateTimeProperty.ts" />
     <TypeScriptCompile Include="DataProperties\DateProperty.ts" />
     <TypeScriptCompile Include="DataProperties\TimeProperty.ts" />
+    <TypeScriptCompile Include="ViewModels\DetailsViewModel.ts" />
+    <TypeScriptCompile Include="ViewModels\SearchViewModel.ts" />
+    <TypeScriptCompile Include="ViewModels\ViewEvent.ts" />
+    <TypeScriptCompile Include="ViewModels\ViewModel.ts" />
+    <TypeScriptCompile Include="ViewModels\ViewParams.ts" />
+    <TypeScriptCompile Include="ViewModels\ViewSelectionEvent.ts" />
     <TypeScriptCompile Include="module.ts" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\jquery-3.1.1.intellisense.js" />
-    <Content Include="Scripts\jquery-3.1.1.js" />
-    <Content Include="Scripts\jquery-3.1.1.min.js" />
-    <Content Include="Scripts\jquery-3.1.1.slim.js" />
-    <Content Include="Scripts\jquery-3.1.1.slim.min.js" />
-    <Content Include="Scripts\knockout-3.4.1.debug.js" />
-    <Content Include="Scripts\knockout-3.4.1.js" />
-    <Content Include="Scripts\moment-with-locales.js" />
-    <Content Include="Scripts\moment-with-locales.min.js" />
-    <Content Include="Scripts\moment.js" />
-    <Content Include="Scripts\moment.min.js" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets')" />
   <PropertyGroup>
     <PostBuildEvent>

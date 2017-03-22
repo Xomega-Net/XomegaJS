@@ -7,15 +7,13 @@ module xomega {
 
         // Retrieves the error list from the specified exception if possible,
         // otherwise constructs a new error list with the exception as the error message.
-        // </summary>
         // <param name="ex">Exception to retrieve the error list from.</param>
         // <returns>An error list retrieved from the exception.</returns>
         public static fromError(err: Error): ErrorList {
-            var errList: ErrorList = err["__errors__"];
-            if (errList !== null) return errList;
-
-            errList = new ErrorList();
-            errList.addError(err.name, err.message);
+            let errList = new ErrorList();
+            let errors: ErrorMessage[] = err["__errors__"];
+            if (errors !== null) errList.Errors(errors);
+            else errList.addError(err.name, err.message);
             return errList;
         }
 
@@ -28,13 +26,15 @@ module xomega {
         }
 
         // Constructs an ErrorList object from an error response to a jQuery AJAX request.
-        public static fromErrorResponse(jqXHR, errorThrow): ErrorList {
-            var json = jqXHR.responseJSON;
+        public static fromErrorResponse(xhr, errorThrow): ErrorList {
+            if (xhr instanceof ErrorList) return xhr;
+            if ($.type(xhr) === 'error') return ErrorList.fromError(xhr);
+            var json = xhr.responseJSON;
             if (json && json.Errors) return ErrorList.fromJSON(json);
             var errLst: ErrorList = new ErrorList();
             if (errLst.fromExceptionJSON(json)) return errLst;
             if (errLst.fromOAuthError(json)) return errLst;
-            errLst.Errors.push(new ErrorMessage(errorThrow, json && json.Message ? json.Message : (jqXHR.responseText ? jqXHR.responseText : errorThrow), ErrorSeverity.Error));
+            errLst.Errors.push(new ErrorMessage(errorThrow, json && json.Message ? json.Message : (xhr.responseText ? xhr.responseText : errorThrow), ErrorSeverity.Error));
             return errLst;
         }
 

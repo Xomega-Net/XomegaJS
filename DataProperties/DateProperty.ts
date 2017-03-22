@@ -1,5 +1,7 @@
 // Copyright (c) 2014 Xomega.Net. All rights reserved.
 
+/// <reference path="DateTimeProperty.ts"/>
+
 module xomega {
 
     // A DateTimeProperty for the date part only.

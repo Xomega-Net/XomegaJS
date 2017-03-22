@@ -27,6 +27,9 @@ module xomega {
         // Gets or sets the modification state of the object.
         public Modified: KnockoutObservable<boolean>;
 
+        /** A flag indicating if the object is tracking modifications */
+        public TrackModifications: boolean = true;
+
         constructor() {
 
             // initialize Editable before properties, since it is used in turn by the properties
@@ -50,10 +53,11 @@ module xomega {
             // initialize Modified after the properties and child objects, since it uses them
             this.Modified = ko.computed<boolean>({
                 read: () => {
+                    if (!this.TrackModifications) return false;
                     var res = this.modified();
                     for (var prop in this) {
-                        if ((<Object>this).hasOwnProperty(prop) && this[prop] && this[prop].Modified) {
-                            var p: IModifiable = <IModifiable>this[prop];
+                        var p: any = this[prop];
+                        if ((<Object>this).hasOwnProperty(prop) && p && p.Modified ) {
                             if (p.Modified() != null) res = res || p.Modified();
                         }
                     }
@@ -63,10 +67,9 @@ module xomega {
                     this.modified(value);
                     if (value === false || value == null) {
                         for (var prop in this) {
-                            if ((<Object>this).hasOwnProperty(prop) && this[prop] && this[prop].Modified) {
-                                var p: IModifiable = <IModifiable>this[prop];
+                            var p: any = this[prop];
+                            if ((<Object>this).hasOwnProperty(prop) && p && p.Modified)
                                 p.Modified(value);
-                            }
                         }
                     }
                 },
@@ -85,11 +88,12 @@ module xomega {
         // and child objects have been added and are therefore accessible.
         onInitialized(): void {
             for (var prop in this) {
-                if ((<Object>this).hasOwnProperty(prop) && this[prop] && this[prop].onInitialized) {
-                    var p: IInitializable = <IInitializable>this[prop];
-                    p.setName(prop);
-                    p.Parent(this);
-                    p.onInitialized();
+                let p: any = this[prop];
+                if ((<Object>this).hasOwnProperty(prop) && p && p.onInitialized) {
+                    var init: IInitializable = <IInitializable>p;
+                    init.setName(prop);
+                    init.Parent(this);
+                    init.onInitialized();
                 }
             }
         }
@@ -102,88 +106,80 @@ module xomega {
         // resets the data object to default values
         public reset(): void {
             for (var prop in this) {
-                var dp = this[prop];
+                let dp: any = this[prop];
                 if (this.hasOwnProperty(prop) && dp && dp.reset) dp.reset();
             }
             this.ValidationErrors.Errors.removeAll();
         }
 
+        // gets current object's data property by name
+        protected getDataProperty(name: string): DataProperty {
+            let names = [name + 'Property', name];
+            for (let nm of names) {
+                let dp: DataProperty = this[nm];
+                if (dp instanceof DataProperty) return dp;
+            }
+            return null;
+        }
+
+        // gets current object's child object by name
+        protected getChildObject(name: string): DataObject {
+            let names = [name + 'Object', name + 'List', name];
+            for (let nm of names) {
+                let dobj: DataObject = this[nm];
+                if (dobj instanceof DataObject) return dobj;
+            }
+            return null;
+        }
+
         // initializes data object's data from the specified JSON object
-        public fromJSON(obj) {
-            for (var prop in obj) {
-                var dp = this[prop];
-                if ((<Object>obj).hasOwnProperty(prop) && dp) {
-                    if (dp instanceof DataProperty) {
-                        dp.setValue(obj[prop], ValueFormat.Transport);
-                        dp.Modified(false);
-                    }
-                    else if (dp instanceof DataObject) dp.fromJSON(obj[prop]);
+        public fromJSON(obj, options?) {
+            for (let prop in obj) {
+                if (!(<Object>obj).hasOwnProperty(prop)) continue;
+                let dp = this.getDataProperty(prop);
+                if (dp) {
+                    dp.setValue(obj[prop], ValueFormat.Transport);
+                    dp.Modified(false);
+                } else {
+                    let dobj = this.getChildObject(prop);
+                    if (dobj) dobj.fromJSON(obj[prop]);
                 }
             }
         }
 
+        // typed function to convert data object values to the specified structure
+        public toStruct<T>(c: { new (): T; }, options?): T {
+            let struct: T = new c();
+            return this.toJSON(struct, options);
+        }
+
         // convert data object's data to a JSON object using the provided contract if any
-        public toJSON(contract?: any): any {
-            var res = {};
-            for (var prop in this) {
-                if (this.hasOwnProperty(prop) && (!contract || contract.hasOwnProperty(prop))) {
-                    if (this[prop] instanceof DataProperty)
-                        res[prop] = this[prop].TransportValue();
-                    else if (this[prop] instanceof DataObject) res[prop] = this[prop].toJSON();
+        public toJSON(contract?: any, options?): any {
+            let res = {};
+            let ignoreEmpty: boolean = !options || options.ignoreEmpty; // true by default
+            for (let prop in this) {
+                if (!this.hasOwnProperty(prop)) continue;
+                let p: any = this[prop];
+                if (p instanceof DataProperty && (!contract || contract.hasOwnProperty(prop))) {
+                    res[p.Name] = p.TransportValue();
+                    // ignore empty values to minimize JSON or the URL string when using $.param() on it
+                    if (ignoreEmpty && !res[p.Name]) delete res[p.Name];
+                } else if (p instanceof DataObject) {
+                    let child = prop.replace(/(Object|List)$/, '');
+                    if (!contract || contract.hasOwnProperty(child))
+                        res[child] = p.toJSON();
                 }
             }
             return res;
         }
 
-        // substitutes url placeholders with matching property values
-        public formatUrl(url: string): string {
-            var self = this;
-            return url.replace(/\{(.*?)\}/, function (param: string, p1: string): string {
-                var prop = toCamelCase(p1);
-                return (self.hasOwnProperty(prop) && self[prop] instanceof DataProperty) ? self[prop].TransportValue() : param;
-            });
-        }
-
-        // convert data object's data to URL parameters string with a leading &
-        public toUrlParams(): string {
-            var url: string = "";
-            for (var prop in this) {
-                if (this.hasOwnProperty(prop)) {
-                    if (this[prop] instanceof DataProperty) {
-                        var val = this[prop].TransportValue();
-                        if ($.isArray(val)) for (var i = 0; i < val.length; i++)
-                            url += "&" + prop + "=" + val[i];
-                        else if (val) url += "&" + prop + "=" + val;
-                    }
-                    else if (this[prop] instanceof DataObject) url += this[prop].toUrlParams();
-                }
-            }
-            return url;
-        }
-
-        // triggers a callback for each property found in the query passing in the value from it
-        public processQueryDict(query: any, callback: (p: DataProperty, value: any) => void) {
-            if (query && callback) {
-                for (var key in query) {
-                    var prop: DataProperty = <DataProperty>this[key];
-                    if (prop)
-                        callback(prop, query[key]);
-                }
-            }
-        }
-
-        // fills properties with values from a query
-        public fromQueryDict(query: any) {
-            this.processQueryDict(query, (p: DataProperty, value: any) => {
-                p.InternalValue(value);
-            });
-        }
-
         public get Properties(): Array<BaseProperty> {
-            var res: Array<BaseProperty> = new Array<BaseProperty>();
-            for (var prop in this) {
-                if ((<Object>this).hasOwnProperty(prop) && this[prop] instanceof BaseProperty)
-                    res.push(this[prop]);
+            let res: Array<BaseProperty> = new Array<BaseProperty>();
+            for (let prop in this) {
+                if ((<Object>this).hasOwnProperty(prop) && this[prop] instanceof BaseProperty) {
+                    let bp: any = this[prop];
+                    res.push(bp as BaseProperty);
+                }
             }
             return res;
         }
@@ -214,10 +210,11 @@ module xomega {
 
             this.ValidationErrors.Errors.removeAll();
             for (var prop in this) {
-                if ((<Object>this).hasOwnProperty(prop) && this[prop] && this[prop].validate) {
-                    var p: IValidatable = <IValidatable>this[prop];
-                    p.validate(force);
-                    this.ValidationErrors.mergeWith(p.ValidationErrors);
+                let p: any = this[prop];
+                if ((<Object>this).hasOwnProperty(prop) && p && p.validate) {
+                    var pv: IValidatable = <IValidatable>p;
+                    pv.validate(force);
+                    this.ValidationErrors.mergeWith(pv.ValidationErrors);
                 }
             }
             this.validateSelf();
@@ -228,6 +225,41 @@ module xomega {
         public validateSelf() {
             // to be overridden in subclasses
         }
+
+        // Reads object data asynchronously
+        public readAsync(options?): JQueryPromise<boolean> {
+            let obj = this;
+            return this.doReadAsync(options).then(() => {
+                obj.IsNew(false);
+                obj.Modified(false);
+                return true;
+            });
+        }
+
+        // Actual implementation of reading object data provided by subclasses
+        protected doReadAsync(options?): JQueryPromise<any> { return $.when(); }
+
+        // Saves object data asynchronously
+        public saveAsync(options?): JQueryPromise<any> {
+            let obj = this;
+            return this.doSaveAsync(options).then(() => {
+                obj.IsNew(false);
+                obj.Modified(false);
+            });
+        }
+
+        // Actual implementation of saving object data provided by subclasses
+        protected doSaveAsync(options?): JQueryPromise<any> { return $.when(); }
+
+        // Deletes object asynchronously
+        public deleteAsync(options?): JQueryPromise<any> { return this.doDeleteAsync(options); }
+
+        // Actual implementation of deleting the object provided by subclasses
+        protected doDeleteAsync(options?): JQueryPromise<any> { return $.when(); }
+
+        // An indicator if the object is new and not yet saved
+        public IsNew: KnockoutObservable<boolean> = ko.observable<boolean>();
+
 
         // a list of callbacks to invoke when the object is ready
         private readyCallbacks: Array<() => void> = [];
@@ -242,8 +274,9 @@ module xomega {
         // returns if the object, including all properties and child objects, is ready
         public isReady(): boolean {
             for (var prop in this) {
-                if ((<Object>this).hasOwnProperty(prop) && this[prop] && this[prop].isReady) {
-                    if (!this[prop].isReady()) return false;
+                let p: any = this[prop];
+                if ((<Object>this).hasOwnProperty(prop) && p && p.isReady) {
+                    if (!p.isReady()) return false;
                 }
             }
             return true;
@@ -256,49 +289,6 @@ module xomega {
                 this.readyCallbacks.forEach((cb) => cb());
                 this.readyCallbacks.length = 0;
             }
-        }
-
-        // gets an array of field criteria
-        public getFieldsCriteria(): Array<FieldCriteria> {
-            // make a map of object's properties
-            var map = {};
-            for (var prop in this) {
-                var p: any = this[prop];
-                if ((<Object>this).hasOwnProperty(prop) && p instanceof BaseProperty)
-                    map[(<BaseProperty>p).Name] = p;
-            }
-            // process operators if any
-            for (var prop in map) {
-                var p: any = map[prop];
-                if (!(p instanceof OperatorProperty)) continue;
-                var op: OperatorProperty = <OperatorProperty>p;
-                // clear mapping for bound properties
-                if (op.AdditionalPropertyName)
-                    map[op.AdditionalPropertyName] = null;
-                if (op.AdditionalPropertyName2)
-                    map[op.AdditionalPropertyName2] = null;
-            }
-            // make array of settings
-            var res: Array<FieldCriteria> = new Array<FieldCriteria>();
-            for (var prop in map) {
-                var p: any = map[prop];
-                if (p instanceof OperatorProperty) {
-                    var op: OperatorProperty = <OperatorProperty>p;
-                    if (op.isNull()) continue;
-                    var data: Array<string> = new Array<string>();
-                    var dp1: DataProperty = op.AdditionalPropertyName ? <DataProperty>this[op.AdditionalPropertyName] : null;
-                    if (dp1 && !dp1.isNull() && dp1.Visible()) data.push(dp1.DisplayStringValue());
-                    var dp2: DataProperty = op.AdditionalPropertyName2 ? <DataProperty>this[op.AdditionalPropertyName2] : null;
-                    if (dp2 && !dp2.isNull() && dp2.Visible()) data.push(dp2.DisplayStringValue());
-                    res.push(new FieldCriteria(op.toString(), op.DisplayStringValue(), data));
-                }
-                else if (p instanceof DataProperty) {
-                    var dp: DataProperty = <DataProperty>p;
-                    if (dp.isNull()) continue;
-                    res.push(new FieldCriteria(dp.toString(), null, [dp.DisplayStringValue()]));
-                }
-            }
-            return res;
         }
     }
 }
