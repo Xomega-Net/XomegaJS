@@ -1,5 +1,9 @@
 // Copyright (c) 2014 Xomega.Net. All rights reserved.
 
+/// <reference path="ILookupCacheLoader.ts"/>
+/// <reference path="LookupCache.ts"/>
+/// <reference path="LookupTable.ts"/>
+
 module xomega {
 
     // A base class for the lookup cache loader implementations.
@@ -34,6 +38,8 @@ module xomega {
             if (!this.isSupported(tableType)) return;
 
             this.loadCache(tableType, (table: LookupTable) => {
+                // do nothing if the table is already loaded by another loader
+                if (cache.getLookupTable(tableType)) return;
                 cache.cacheLookupTable(table);
                 // ensure supportedTypes gets populated
                 if (this.supportedTypes == null) this.supportedTypes = new Array<string>();

@@ -71,6 +71,9 @@ module xomega {
         public handleVisible(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
             ko.bindingHandlers.visible.update(element, () => valueAccessor().Visible,
                 allBindingsAccessor, viewModel, bindingContext);
+            var label = this.getLabel(element);
+            if (label) ko.bindingHandlers.visible.update(label, () => valueAccessor().Visible,
+                allBindingsAccessor, viewModel, bindingContext);
         }
 
         // handle changes in Required and udpate the label accordingly

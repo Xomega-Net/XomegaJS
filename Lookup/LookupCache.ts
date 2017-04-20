@@ -36,8 +36,11 @@ module xomega {
                 notify = new Array<(type: string) => void>();
                 if (onReadyCallback != null) notify.push(onReadyCallback);
                 this.notifyQueues[type] = notify;
-                for (var i = 0; i < LookupCache.cacheLoaders.length; i++)
-                    LookupCache.cacheLoaders[i].load(this, type);
+                for (var i = LookupCache.cacheLoaders.length - 1; i >= 0; i--)
+                    if (LookupCache.cacheLoaders[i].isSupported(type)) {
+                        LookupCache.cacheLoaders[i].load(this, type);
+                        return;
+                    }
             }
         }
 

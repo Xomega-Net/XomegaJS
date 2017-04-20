@@ -49,8 +49,15 @@ module xomega {
         // Constructs a valid header of the given type with the specified ID and text.
         constructor(type: string, id: string, text: string) {
             this.type = type;
-            this.id = id;
-            this.text = text;
+            this.id = '' + id;
+            this.text = '' + text;
+        }
+
+        /// Compares this header with another header for equality by values.
+        /// Two headers are considered equal if they have the same type and the same ID and validity.
+        public equals(h: Header): boolean {
+            if (!h) return false;
+            return this.type == h.type && this.id == h.id && this.isValid == h.isValid;
         }
 
         // Deserializes a Header object from JSON that contains a serialized Xomega Framework Header.

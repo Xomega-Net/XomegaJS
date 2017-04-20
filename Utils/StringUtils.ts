@@ -18,17 +18,15 @@ module xomega {
         return (params && params.length == 1 && $.isArray(params[0])) ? getParams(params[0]) : params;
     }
 
-    // simple utility function to extract a URL parameter
-    export function urlParam(url: string, param) {
-        if (param = (new RegExp('[?&]' + encodeURIComponent(param) + '=([^&]*)')).exec(url))
-            return decodeURIComponent(param[1]);
-    }
-
-
     // simple utility function to convert a string to CamelCase
     export function toCamelCase(str: string) {
         return str.replace(/(^| |\.|-|_|\/)(.)/g, function (match, g1, g2) {
             return g2.toUpperCase();
         });
+    }
+
+    // turns the given value into an observable using specified default value
+    export function makeObservable(val, def): KnockoutObservable<any> {
+        return ko.isObservable(val) ? val : ko.observable(val || def);
     }
 }

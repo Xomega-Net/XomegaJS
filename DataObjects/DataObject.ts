@@ -231,7 +231,6 @@ module xomega {
             let obj = this;
             return this.doReadAsync(options).then(() => {
                 obj.IsNew(false);
-                obj.Modified(false);
                 return true;
             });
         }
@@ -242,6 +241,9 @@ module xomega {
         // Saves object data asynchronously
         public saveAsync(options?): JQueryPromise<any> {
             let obj = this;
+            obj.validate(true);
+            if (obj.ValidationErrors.hasErrors())
+                return $.Deferred().reject(obj.ValidationErrors);
             return this.doSaveAsync(options).then(() => {
                 obj.IsNew(false);
                 obj.Modified(false);

@@ -49,6 +49,13 @@ module xomega {
             super();
 
             this.value = ko.observable<any>();
+            this.value.equalityComparer = function (a, b) {
+                if (a && !b || !a && b) return false;
+                if (!a && !b && typeof a === typeof b) return true; // account for undefined/null/false difference
+                if (a && $.isFunction(a.equals)) return a.equals(b);
+                if (b && $.isFunction(b.equals)) return b.equals(a);
+                return a === b;
+            };
 
             this.InternalValue = ko.computed({
                 read: () => { return this.value(); },

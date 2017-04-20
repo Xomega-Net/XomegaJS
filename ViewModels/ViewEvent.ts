@@ -33,13 +33,19 @@ module xomega {
         public without(viewEvent: ViewEvent): ViewEvent { return new ViewEvent(this.events & ~viewEvent.events); }
 
         // Returns if the view was closed.
-        public isClosed(): boolean { return (this.events & ViewEvent.Closed.events) > 0; }
+        public isClosed(self: boolean = true): boolean {
+            return (self && !this.isChild() || !self) && (this.events & ViewEvent.Closed.events) > 0;
+        }
 
         // Returns if the view was saved.
-        public isSaved(): boolean { return (this.events & ViewEvent.Saved.events) > 0; }
+        public isSaved(self: boolean = true): boolean {
+            return (self && !this.isChild() || !self) && (this.events & ViewEvent.Saved.events) > 0;
+        }
 
         // Returns if the view was closed.
-        public isDeleted(): boolean { return (this.events & ViewEvent.Deleted.events) > 0; }
+        public isDeleted(self: boolean = true): boolean {
+            return (self && !this.isChild() || !self) && (this.events & ViewEvent.Deleted.events) > 0;
+        }
 
         // Returns if a child view event occured.
         public isChild(): boolean { return (this.events & ViewEvent.Child.events) > 0; }

@@ -75,7 +75,7 @@
     <TypeScriptCompile Include="Lookup\LookupCache.ts" />
     <TypeScriptCompile Include="Lookup\LookupTable.ts" />
     <TypeScriptCompile Include="Lookup\XomegaCacheLoader.ts" />
-    <None Include="Lookup\BaseLookupCacheLoader.ts" />
+    <TypeScriptCompile Include="Lookup\BaseLookupCacheLoader.ts" />
     <TypeScriptCompile Include="DataObjects\BaseProperty.ts" />
     <TypeScriptCompile Include="DataObjects\IInitializable.ts" />
     <TypeScriptCompile Include="DataObjects\IValidatable.ts" />

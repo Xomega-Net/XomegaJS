@@ -60,10 +60,32 @@ module xomega {
         public compare: (h1: Header, h2: Header) => number;
 
         // callback to update value when lookup table is ready
-        private updateValue: (type: string) => void;
+        public updateValue: (type: string) => void;
 
         // callback to update value list when lookup table is ready
         private updateList: (type: string) => void;
+
+        // An instance of local lookup table when the possible values are not globally cached,
+        // but depend on the current state of the data object.
+        private localLookupTable: LookupTable;
+
+        // Gets the lookup table for the property. The default implementation uses the <see cref="EnumType"/>
+        // to find the lookup table in the lookup cache specified by the <see cref="CacheType"/>.
+        // <returns>The lookup table to be used for the property.</returns>
+        protected getLookupTable(onReadyCallback?: (type: string) => void): LookupTable {
+            if (this.localLookupTable != null) return this.localLookupTable;
+            return LookupCache.current.getLookupTable(this.EnumType, onReadyCallback);
+        }
+
+        // Sets local lookup table for the property, blanks out the current value if it's not in the table
+        // and notifies listeners about updated value list
+        public setLookupTable(table: LookupTable) {
+            this.localLookupTable = table;
+            if (table && !table.lookupById(this.TransportValue()))
+                this.InternalValue(null);
+            else if (this.updateValue) this.updateValue(null);
+            if (this.updateValueList) this.updateValueList();
+        }
 
         // Converts a single value to a given format. For internal format
         // this method tries to convert the value to a header by looking it up
@@ -75,7 +97,7 @@ module xomega {
             if (format == ValueFormat.Internal) {
                 if (value instanceof Header && h.type == this.EnumType) return value;
                 var str: string = ("" + value).trim();
-                var tbl: LookupTable = LookupCache.current.getLookupTable(this.EnumType, this.updateValue);
+                var tbl: LookupTable = this.getLookupTable(this.updateValue);
                 if (tbl != null) {
                     h = null;
                     if (this.KeyFormat != Header.fieldId) h = tbl.lookupByFormat(this.KeyFormat, str);
@@ -103,8 +125,7 @@ module xomega {
         // the specified compare function.
         public getPossibleValues(): Array<any> {
             var res: Array<Header>;
-            if (this.EnumType == null) return res;
-            var tbl: LookupTable = LookupCache.current.getLookupTable(this.EnumType, this.updateList);
+            var tbl: LookupTable = this.getLookupTable(this.updateList);
             if (tbl != null) {
                 res = tbl.getValues(this.filter, this);
                 if (this.compare) res = res.sort(this.compare);

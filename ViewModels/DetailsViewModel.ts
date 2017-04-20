@@ -57,7 +57,7 @@ This operation cannot be undone.`)) return false;
 
         // Handles the delete action, and closes the view on successful delete
         public onDelete() {
-            if (this.DetailsObject) {
+            if (this.canDelete() && this.DetailsObject) {
                 let vm = this;
                 this.DetailsObject.deleteAsync().then(() => {
                     vm.fireViewEvent(ViewEvent.Deleted);
