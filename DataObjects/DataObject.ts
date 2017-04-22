@@ -1,4 +1,4 @@
-// Copyright (c) 2014 Xomega.Net. All rights reserved.
+// Copyright (c) 2017 Xomega.Net. All rights reserved.
 
 module xomega {
 
@@ -260,7 +260,7 @@ module xomega {
         protected doDeleteAsync(options?): JQueryPromise<any> { return $.when(); }
 
         // An indicator if the object is new and not yet saved
-        public IsNew: KnockoutObservable<boolean> = ko.observable<boolean>();
+        public IsNew: KnockoutObservable<boolean> = ko.observable<boolean>(true);
 
 
         // a list of callbacks to invoke when the object is ready

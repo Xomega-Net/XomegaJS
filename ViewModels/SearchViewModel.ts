@@ -1,4 +1,4 @@
-// Copyright (c) 2014 Xomega.Net. All rights reserved.
+// Copyright (c) 2017 Xomega.Net. All rights reserved.
 
 /// <reference path="ViewModel.ts"/>
 
