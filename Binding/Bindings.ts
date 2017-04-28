@@ -17,6 +17,12 @@ module xomega {
                 },
             };
 
+            ko.bindingHandlers['id'] = {
+                init: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                    element.id = valueAccessor();
+                }
+            };
+
             // set up binding for sorting grid columns
             ko.bindingHandlers['sortby'] = {
                 init: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {

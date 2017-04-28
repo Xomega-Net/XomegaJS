@@ -98,7 +98,6 @@
     <TypeScriptCompile Include="Binding\CheckboxBinding.ts" />
     <TypeScriptCompile Include="Binding\SelectBinding.ts" />
     <TypeScriptCompile Include="Binding\OptionsBinding.ts" />
-    <TypeScriptCompile Include="Binding\AutoSuggestBinding.ts" />
     <TypeScriptCompile Include="DataProperties\EnumProperty.ts" />
     <TypeScriptCompile Include="DataProperties\OperatorProperty.ts" />
     <TypeScriptCompile Include="DataProperties\TextProperty.ts" />

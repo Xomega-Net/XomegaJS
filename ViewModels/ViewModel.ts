@@ -32,12 +32,20 @@ module xomega {
 
         public getErrorList(): ErrorList { return this.errorList; }
 
+        // id prefix for the current view to append to all IDs
+        public idPfx: string = '';
+
+        // Returns global id for the given local view id
+        protected id(localId: string): string {
+            return this.idPfx + localId;
+        }
+
         // observable current active child view
         public ActiveChildView: KnockoutObservable<ViewModel> = ko.observable<ViewModel>();
 
         // navigate to a child view asynchrounously
-        public navigateTo(childViewName: string, activationParams): JQueryPromise<boolean> {
-            let vm = this;ko
+        public navigateTo(childViewName: string, activationParams, idPfx = '_'): JQueryPromise<boolean> {
+            let vm = this;
             return this.acquireView(childViewName).then(function (view) {
                 let res: JQueryPromise<boolean>;
                 // check if active view exists and can be reused
@@ -53,8 +61,10 @@ module xomega {
                     if (!success) return false;
                     return view.activateAsync(activationParams).then(function (success) {
                         if (!success) return false;
-                        if (view !== vm.ActiveChildView())
+                        if (view !== vm.ActiveChildView()) {
+                            view.idPfx = vm.idPfx + idPfx;
                             vm.ActiveChildView(view);
+                        }
                         return true;
                     });
                 });

@@ -3,6 +3,7 @@
 /// <reference path="PropertyBinding.ts"/>
 
 module xomega {
+    declare var controls: any;
 
     // property binding for input text controls
     export class InputTextBinding extends PropertyBinding {
@@ -21,6 +22,19 @@ module xomega {
                 return valueAccessor().Editable() ?
                     valueAccessor().EditStringValue : valueAccessor().DisplayStringValue;
             }, allBindingsAccessor, viewModel, bindingContext);
+
+
+            if (controls) {
+                let el = $(element);
+                if (typeof (controls.datePicker) === 'function' && valueAccessor() instanceof DateTimeProperty
+                        && (el.hasClass('date') || el.hasClass('datetime'))) {
+                    let dtp: DateTimeProperty = valueAccessor();
+                    controls.datePicker(el, dtp.EditFormat);
+                }
+                if (typeof (controls.autoComplete) === 'function' && valueAccessor() instanceof EnumProperty) {
+                    controls.autoComplete(el, valueAccessor());
+                }
+            }
         }
 
         public handleValue(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
