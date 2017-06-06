@@ -1,7 +1,14 @@
+@echo off
+
 SET VER=%1
 SET NUGET_PATH=.nuget\NuGet.exe
 SET NUGET_VERSION=latest
 SET CACHED_NUGET=%LocalAppData%\NuGet\nuget.%NUGET_VERSION%.exe
+
+IF '%VER%'=='' (
+  echo Please use the following format: release.bat {version}
+  goto end
+)
 
 IF NOT EXIST .nuget md .nuget
 IF NOT EXIST %NUGET_PATH% (
@@ -28,3 +35,8 @@ copy "bin\xomega.js" "pkg\content\Scripts\xomega-%VER%.js" >nul
 -replace '(^<)', '________$1' -replace ' +_', '_____' -replace '_', ' ') > pkg\Package.nuspec
 
 %NUGET_PATH% pack "pkg\Package.nuspec" -OutputDirectory "pkg\XomegaJS.%VER%"
+
+rd /s /q pkg\content
+del pkg\Package.nuspec
+
+:end

@@ -96,7 +96,7 @@ module xomega {
                 // and to true when it is subsequently changed
                 if (this.Modified() == null)
                     this.Modified(false);
-                else {
+                else if (this.Editable()) { // track modifications for editable properties only
                     this.Modified(true);
                     this.validate(true); // don't validate unmodified value
                 }
