@@ -1,4 +1,5 @@
 .nuget
+.vs
 bin
 obj
 packages
