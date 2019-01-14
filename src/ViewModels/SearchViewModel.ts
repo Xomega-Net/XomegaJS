@@ -1,4 +1,4 @@
-// Copyright (c) 2017 Xomega.Net. All rights reserved.
+// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 /// <reference path="ViewModel.ts"/>
 
@@ -63,6 +63,7 @@ module xomega {
                 this.ListObject.reset();
             if (this.AutoCollapseCriteria)
                 this.CriteriaCollapsed(false);
+            this.getErrorList().Errors.removeAll();
         }
 
         /** Runs the search asynchronously */
@@ -71,7 +72,7 @@ module xomega {
             if (vm.ListObject)
                 vm.ListObject.validate(true);
             if (vm.ListObject.ValidationErrors.hasErrors())
-                return $.Deferred().reject(vm.ListObject.ValidationErrors);
+                return $.Deferred<boolean>().reject(vm.ListObject.ValidationErrors);
             return vm.ListObject.readAsync({ preserveSelection: preserveSelection });
         }
 

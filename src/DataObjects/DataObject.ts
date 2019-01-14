@@ -1,4 +1,4 @@
-// Copyright (c) 2017 Xomega.Net. All rights reserved.
+// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 module xomega {
 
@@ -163,7 +163,7 @@ module xomega {
                 if (p instanceof DataProperty && (!contract || contract.hasOwnProperty(prop))) {
                     res[p.Name] = p.TransportValue();
                     // ignore empty values to minimize JSON or the URL string when using $.param() on it
-                    if (ignoreEmpty && !res[p.Name]) delete res[p.Name];
+                    if (ignoreEmpty && res[p.Name] == null) delete res[p.Name];
                 } else if (p instanceof DataObject) {
                     let child = prop.replace(/(Object|List)$/, '');
                     if (!contract || contract.hasOwnProperty(child))
@@ -229,6 +229,7 @@ module xomega {
         // Reads object data asynchronously
         public readAsync(options?): JQueryPromise<boolean> {
             let obj = this;
+            this.ValidationErrors.Errors.removeAll();
             return this.doReadAsync(options).then(() => {
                 obj.IsNew(false);
                 return true;
@@ -254,7 +255,10 @@ module xomega {
         protected doSaveAsync(options?): JQueryPromise<any> { return $.when(); }
 
         // Deletes object asynchronously
-        public deleteAsync(options?): JQueryPromise<any> { return this.doDeleteAsync(options); }
+        public deleteAsync(options?): JQueryPromise<any> {
+            this.ValidationErrors.Errors.removeAll();
+            return this.doDeleteAsync(options);
+        }
 
         // Actual implementation of deleting the object provided by subclasses
         protected doDeleteAsync(options?): JQueryPromise<any> { return $.when(); }

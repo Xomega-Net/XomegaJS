@@ -1,4 +1,4 @@
-// Copyright (c) 2017 Xomega.Net. All rights reserved.
+// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 module xomega {
 
@@ -30,7 +30,7 @@ module xomega {
             if (xhr instanceof ErrorList) return xhr;
             if ($.type(xhr) === 'error') return ErrorList.fromError(xhr);
             var json = xhr.responseJSON;
-            if (json && json.Errors) return ErrorList.fromJSON(json);
+            if (json && json.Messages) return ErrorList.fromJSON(json.Messages);
             var errLst: ErrorList = new ErrorList();
             if (errLst.fromExceptionJSON(json)) return errLst;
             if (errLst.fromOAuthError(json)) return errLst;

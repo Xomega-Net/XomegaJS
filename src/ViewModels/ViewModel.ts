@@ -1,4 +1,4 @@
-// Copyright (c) 2017 Xomega.Net. All rights reserved.
+// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 module xomega {
 
@@ -74,7 +74,7 @@ module xomega {
         }
 
         protected acquireView(viewName: string): JQueryPromise<ViewModel> {
-            return $.Deferred(function (dfd) {
+            return $.Deferred<ViewModel>(function (dfd) {
                 require([viewName], function (mod) {
                     let view: ViewModel = null;
                     if ($.isFunction(mod)) {

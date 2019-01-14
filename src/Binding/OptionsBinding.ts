@@ -1,4 +1,7 @@
-// Copyright (c) 2017 Xomega.Net. All rights reserved.
+// Copyright (c) 2019 Xomega.Net. All rights reserved.
+
+/// <reference path="OutputTextBinding.ts"/>
+//  ^^^ Above reference is needed to register the OutputTextBinding first
 
 module xomega {
 

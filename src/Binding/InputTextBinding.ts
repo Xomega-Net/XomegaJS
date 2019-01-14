@@ -1,6 +1,7 @@
-// Copyright (c) 2017 Xomega.Net. All rights reserved.
+// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
-/// <reference path="PropertyBinding.ts"/>
+/// <reference path="OutputTextBinding.ts"/>
+//  ^^^ Above reference is needed to register the OutputTextBinding first
 
 module xomega {
     declare var controls: any;
@@ -10,7 +11,7 @@ module xomega {
 
         public static inputTypes: Array<string> = ['text', 'password', 'email', 'tel', 'url'];
 
-        public appliesTo(element, property): boolean {
+        public appliesTo(element, _property): boolean {
             return element.tagName.toLowerCase() == "textarea" ||
                 element.tagName.toLowerCase() == "input" && InputTextBinding.inputTypes.indexOf(element.type) >= 0;
         }
