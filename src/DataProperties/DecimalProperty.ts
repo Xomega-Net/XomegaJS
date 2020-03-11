@@ -5,6 +5,8 @@ module xomega {
     // A data property that holds numeric values.
     export class DecimalProperty extends DataProperty {
 
+        public static DefaultNumberFormat: Intl.NumberFormat = new Intl.NumberFormat();
+
         // The minimum valid value for the property.
         public MinimumValue: number;
 
@@ -12,14 +14,12 @@ module xomega {
         public MaximumValue: number;
 
         // The format for displaying the number as a string.
-        public DisplayFormat: string;
-
-        // The number of fraction digits to display.
-        public FractionDigits: number;
+        public DisplayFormat: Intl.NumberFormat;
 
         //  Constructs a new DecimalProperty.
         constructor() {
             super();
+            this.DisplayFormat = DecimalProperty.DefaultNumberFormat;
             this.Validators.push(DecimalProperty.validateNumber,
                 DecimalProperty.validateMinimum, DecimalProperty.validateMaximum);
         }
@@ -34,10 +34,9 @@ module xomega {
                 if (this.isValueNull(value, fmt)) return null;
                 return isNaN(value) ? value : parseFloat('' + value);
             }
-            if (fmt == ValueFormat.DisplayString && typeof value === 'number' && !this.isValueNull(value, fmt)) {
-                var s = this.FractionDigits ? (<number>value).toFixed(this.FractionDigits) : value;
-                if (this.DisplayFormat) s = format(this.DisplayFormat, s);
-                return s;
+            if (fmt == ValueFormat.DisplayString && typeof value === 'number' &&
+                !this.isValueNull(value, fmt) && this.DisplayFormat) {
+                return this.DisplayFormat.format(value);
             }
             return super.convertValue(value, fmt);
         }

@@ -22,7 +22,7 @@ module xomega {
                 } else {
                     vm.DetailsObject.fromJSON(vm.Params);
                     vm.DetailsObject.Modified(null);
-                    return vm.loadDataAsync();
+                    return vm.loadDataAsync(false);
                 }
             });
         }
@@ -69,14 +69,14 @@ This operation cannot be undone.`)) return false;
         /**
          * Loads the details view data asynchronously.
          */
-        protected loadDataAsync(): JQueryPromise<boolean> {
-            return this.DetailsObject ? this.DetailsObject.readAsync() : $.when(true);
+        protected loadDataAsync(preserveSelection: boolean): JQueryPromise<boolean> {
+            return this.DetailsObject ? this.DetailsObject.readAsync({ preserveSelection: preserveSelection }) : $.when(true);
         }
 
         // Default handler for saving or deleting of a child details view.
         protected onChildEvent(childViewModel: ViewModel, e: ViewEvent) {
             if (e.isSaved() || e.isDeleted())
-                this.loadDataAsync(); // reload child lists
+                this.loadDataAsync(true); // reload child lists
 
             super.onChildEvent(childViewModel, e);
         }

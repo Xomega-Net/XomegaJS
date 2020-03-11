@@ -40,9 +40,20 @@ module xomega {
                 // prevent from changing the modification state
                 var mod = this.Modified();
                 this.Modified(null); // prevent forced validation
-                var h: Header = this.InternalValue();
-                if (h instanceof Header && !h.isValid)
-                    this.InternalValue(h.id);
+                if (this.Parent() instanceof DataListObject) {
+                    let listObj: DataListObject = <DataListObject>this.Parent();
+                    let list = listObj.List();
+                    for (let i = 0; i < list.length; i++) {
+                        let h: Header = list[i][this.Name];
+                        if (h instanceof Header && !h.isValid)
+                            list[i][this.Name] = this.resolveValue(h.id, ValueFormat.Internal, ValueFormat.Transport);
+                    }
+                    listObj.List.notifySubscribers();
+                } else {
+                    let h: Header = this.InternalValue();
+                    if (h instanceof Header && !h.isValid)
+                        this.InternalValue(h.id);
+                }
                 this.Modified(mod);
             };
             this.updateList = (type: string) => {
@@ -167,6 +178,10 @@ module xomega {
             }
         }
 
+        /// True if null cascading value matches only values with attributes set to null.
+        /// False if cascading value matches any value.
+        public cascadingMatchNulls: boolean;
+
         // The method that determines if a given possible value matches the current values
         // of all cascading properties using the attribute specified for each property.
         // Cascading properties with blank values are ignored, i.e. a blank value
@@ -185,11 +200,11 @@ module xomega {
 
                 var p: DataProperty = this.cascadingProperties[attr].property;
                 var pv = p.TransportValue(); // use transport values (IDs) for correct comparison
-                // resolve attribute to transport though internal first
+                // resolve attribute to transport through internal first
                 // to handle possible string/number differences
                 var hv = p.resolveValue(h.attr[attr], ValueFormat.Internal);
                 hv = p.resolveValue(hv, ValueFormat.Transport);
-                if (p.isNull() || p.isValueNull(hv, ValueFormat.Transport)) continue;
+                if (p.isNull() && !this.cascadingMatchNulls) continue;
 
                 var match: boolean;
                 if ($.isArray(hv)) {
@@ -198,7 +213,8 @@ module xomega {
                             return $.inArray(v, hv) > -1;
                         }).length > 0;
                     } else match = $.inArray(pv, hv) > -1;
-                } else match = $.isArray(pv) ? $.inArray(hv, pv) > -1 : (hv == pv);
+                } else if (hv) match = $.isArray(pv) ? $.inArray(hv, pv) > -1 : (hv == pv);
+                else match = (pv == null);
 
                 if (!match) return false;
             }

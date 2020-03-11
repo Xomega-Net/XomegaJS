@@ -101,6 +101,7 @@
     <TypeScriptCompile Include="DataProperties\BooleanProperty.ts" />
     <TypeScriptCompile Include="DataProperties\DecimalProperty.ts" />
     <TypeScriptCompile Include="DataProperties\MoneyProperty.ts" />
+    <TypeScriptCompile Include="DataProperties\PercentProperty.ts" />
     <TypeScriptCompile Include="DataProperties\IntegerProperty.ts" />
     <TypeScriptCompile Include="DataProperties\DateTimeProperty.ts" />
     <TypeScriptCompile Include="DataProperties\DateProperty.ts" />

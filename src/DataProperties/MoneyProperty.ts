@@ -6,12 +6,11 @@ module xomega {
     export class MoneyProperty extends DecimalProperty {
 
         // Default format for displaying currency.
-        public static DefaultMoneyFormat: string = "${0}";
+        public static DefaultMoneyFormat: Intl.NumberFormat = new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' });
 
         //  Constructs a new MoneyProperty.
         constructor() {
             super();
-            this.FractionDigits = 2;
             this.DisplayFormat = MoneyProperty.DefaultMoneyFormat;
         }
     }
