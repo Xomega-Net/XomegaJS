@@ -41,7 +41,7 @@ module xomega {
         // Deserializes a LookupTable object from JSON that contains a serialized Xomega Framework LookupTable.
         public static fromJSON(obj): LookupTable {
             var data: Array<Header> = obj.data.map((val, idx, arr) => Header.fromJSON(val));
-            var tbl: LookupTable = new LookupTable(obj.Type, data, obj.caseSensitive);
+            var tbl: LookupTable = new LookupTable(obj.type || obj.Type, data, obj.caseSensitive || obj.CaseSensitive);
             return tbl;
         }
 

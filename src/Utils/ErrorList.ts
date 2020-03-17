@@ -19,8 +19,9 @@ module xomega {
 
         // Deserializes an ErrorList object from JSON that contains a serialized Xomega Framework ErrorList.
         public static fromJSON(obj): ErrorList {
-            var data: Array<ErrorMessage> = obj.Errors.map((val, idx, arr) => ErrorMessage.fromJSON(val));
-            var lst: ErrorList = new ErrorList();
+            let errors = obj.errors || obj.Errors;
+            let data: Array<ErrorMessage> = errors.map((val, idx, arr) => ErrorMessage.fromJSON(val));
+            let lst: ErrorList = new ErrorList();
             ko.utils.arrayPushAll<ErrorMessage>(lst.Errors, data);
             return lst;
         }
@@ -30,11 +31,14 @@ module xomega {
             if (xhr instanceof ErrorList) return xhr;
             if ($.type(xhr) === 'error') return ErrorList.fromError(xhr);
             var json = xhr.responseJSON;
-            if (json && json.Messages) return ErrorList.fromJSON(json.Messages);
+            if (json && (json.messages || json.Messages))
+                return ErrorList.fromJSON(json.messages || json.Messages);
             var errLst: ErrorList = new ErrorList();
             if (errLst.fromExceptionJSON(json)) return errLst;
             if (errLst.fromOAuthError(json)) return errLst;
-            errLst.Errors.push(new ErrorMessage(errorThrow, json && json.Message ? json.Message : (xhr.responseText ? xhr.responseText : errorThrow), ErrorSeverity.Error));
+            errLst.Errors.push(new ErrorMessage(errorThrow,
+                json && (json.message || json.Message) ? (json.message || json.Message) :
+                (xhr.responseText ? xhr.responseText : errorThrow), ErrorSeverity.Error));
             return errLst;
         }
 

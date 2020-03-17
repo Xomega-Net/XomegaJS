@@ -113,8 +113,11 @@ module xomega {
         }
 
         // gets current object's data property by name
-        protected getDataProperty(name: string): DataProperty {
+        public getDataProperty(name: string): DataProperty {
             let names = [name + 'Property', name];
+            let ccName = toCamelCase(name);
+            if (name != ccName)
+                names.push(ccName + 'Property', ccName);
             for (let nm of names) {
                 let dp: DataProperty = this[nm];
                 if (dp instanceof DataProperty) return dp;
@@ -125,6 +128,9 @@ module xomega {
         // gets current object's child object by name
         protected getChildObject(name: string): DataObject {
             let names = [name + 'Object', name + 'List', name];
+            let ccName = toCamelCase(name);
+            if (name != ccName)
+                names.push(ccName + 'Object', ccName + 'List', ccName);
             for (let nm of names) {
                 let dobj: DataObject = this[nm];
                 if (dobj instanceof DataObject) return dobj;
@@ -133,7 +139,7 @@ module xomega {
         }
 
         // initializes data object's data from the specified JSON object
-        public fromJSON(obj, options?) {
+        public fromJSON(obj, _options?) {
             for (let prop in obj) {
                 if (!(<Object>obj).hasOwnProperty(prop)) continue;
                 let dp = this.getDataProperty(prop);

@@ -19,21 +19,21 @@ module xomega {
             req.url += format(XomegaCacheLoader.uriTemplate, tableType);
             req.success = (data, textStatus, jqXHR) => {
                 var tbl: LookupTable;
-                if (data == null) {
+                var result = data ? (data.result || data.Result) : null;
+                if (!result) {
                     // do nothing if the table is already loaded by another loader
                     if (cache.getLookupTable(tableType)) return;
                     var err: ErrorList = new ErrorList();
                     err.addError(format("Lookup table '{0}' is not found.", tableType));
                     tbl = LookupTable.fromErrors(tableType, err);
                 }
-                else tbl = LookupTable.fromJSON(data);
+                else tbl = LookupTable.fromJSON(result);
                 cache.cacheLookupTable(tbl);
             };
             req.error = (jqXHR, textStatus, errorThrow) => {
                 // do nothing if the table is already loaded by another loader
                 if (cache.getLookupTable(tableType)) return;
-                var errLst: ErrorList = new ErrorList();
-                errLst.Errors.push(new ErrorMessage(errorThrow, jqXHR.responseText, ErrorSeverity.Error));
+                let errLst = ErrorList.fromErrorResponse(jqXHR, errorThrow);
                 console.error(jqXHR.responseText);
                 cache.cacheLookupTable(LookupTable.fromErrors(tableType, errLst));
             };

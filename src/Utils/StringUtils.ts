@@ -25,6 +25,33 @@ module xomega {
         });
     }
 
+    // populates initialized object from the specified JSON with different member casing
+    export function fromJSON(obj: Object, json: Object) {
+        for (var prop in json) {
+            if (!json.hasOwnProperty(prop)) continue;
+            let ccProp = toCamelCase(prop);
+            let val = json[prop];
+            if ($.isArray(val)) {
+                let arr = null;
+                if ($.isArray(obj[ccProp])) arr = obj[ccProp];
+                else if ($.isArray(obj[prop])) arr = obj[prop];
+                if (val.length && arr && arr.length && arr[0]) {
+                    for (var i = 0; i < val.length; i++) {
+                        if (i < val.length - 1)
+                            arr[i + 1] = $.extend(true, {}, arr[i]);
+                        fromJSON(arr[i], val[i]);
+                    }
+                } else obj[prop] = val;
+            } else if (typeof val === 'object') {
+                if (obj[ccProp]) fromJSON(obj[ccProp], val);
+                else if (obj[prop]) fromJSON(obj[prop], val);
+                else obj[prop] = val;
+            } else if (obj.hasOwnProperty(ccProp))
+                obj[ccProp] = val;
+            else obj[prop] = val;
+        }
+    }
+
     // turns the given value into an observable using specified default value
     export function makeObservable(val, def): KnockoutObservable<any> {
         return ko.isObservable(val) ? val : ko.observable(val || def);

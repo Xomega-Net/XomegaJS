@@ -62,9 +62,9 @@ module xomega {
 
         // Deserializes a Header object from JSON that contains a serialized Xomega Framework Header.
         public static fromJSON(obj): Header {
-            var h: Header = new Header(obj.Type, obj.Id, obj.Text);
-            h.defaultFormat = obj.DefaultFormat;
-            h.isActive = obj.IsActive;
+            var h: Header = new Header(obj.type || obj.Type, obj.id || obj.Id, obj.text || obj.Text);
+            h.defaultFormat = obj.defaultFormat || obj.DefaultFormat;
+            h.isActive = obj.isActive || obj.IsActive;
             // DataContractSerializer returns an array of Key/Value pairs
             if ($.isArray(obj.attributes)) {
                 for (var i = 0; i < obj.attributes.length; i++) {

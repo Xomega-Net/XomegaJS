@@ -24,9 +24,10 @@ module xomega {
         // initializes data row's data from the specified JSON object
         public fromJSON(obj) {
             for (var prop in obj) {
-                var dp = this.List[prop];
-                if ((<Object>obj).hasOwnProperty(prop) && dp instanceof DataProperty) {
-                    this[prop] = dp.resolveValue(obj[prop], ValueFormat.Internal, ValueFormat.Transport);
+                if (!(<Object>obj).hasOwnProperty(prop)) continue;
+                var dp = this.List.getDataProperty(prop);
+                if (dp) {
+                    this[dp.Name] = dp.resolveValue(obj[prop], ValueFormat.Internal, ValueFormat.Transport);
                 }
             }
         }

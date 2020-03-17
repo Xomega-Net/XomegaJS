@@ -25,7 +25,7 @@ module xomega {
 
         // Deserializes an ErrorMessage object from JSON that contains a serialized Xomega Framework ErrorMessage.
         public static fromJSON(obj): ErrorMessage {
-            return new ErrorMessage(obj.Code, obj.Message, obj.Severity);
+            return new ErrorMessage(obj.code || obj.Code, obj.message || obj.Message, obj.severity || obj.Severity);
         }
     }
 }
