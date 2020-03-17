@@ -96,6 +96,8 @@
     <TypeScriptCompile Include="Binding\SelectBinding.ts" />
     <TypeScriptCompile Include="Binding\OptionsBinding.ts" />
     <TypeScriptCompile Include="DataProperties\EnumProperty.ts" />
+    <TypeScriptCompile Include="DataProperties\EnumBoolProperty.ts" />
+    <TypeScriptCompile Include="DataProperties\EnumIntProperty.ts" />
     <TypeScriptCompile Include="DataProperties\OperatorProperty.ts" />
     <TypeScriptCompile Include="DataProperties\TextProperty.ts" />
     <TypeScriptCompile Include="DataProperties\BooleanProperty.ts" />

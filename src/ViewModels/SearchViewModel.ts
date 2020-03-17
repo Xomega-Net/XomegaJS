@@ -116,7 +116,7 @@ module xomega {
             if (e.isClosed() && this.ListObject) {
                 this.ListObject.clearSelectedRows();
             }
-            if (e.isSaved() || e.isDeleted()) {
+            if (e.isSaved(false) || e.isDeleted(false)) {
                 this.searchAsync(true);
             }
             super.onChildEvent(childViewModel, e);

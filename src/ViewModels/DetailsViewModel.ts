@@ -75,7 +75,7 @@ This operation cannot be undone.`)) return false;
 
         // Default handler for saving or deleting of a child details view.
         protected onChildEvent(childViewModel: ViewModel, e: ViewEvent) {
-            if (e.isSaved() || e.isDeleted())
+            if (e.isSaved(false) || e.isDeleted(false))
                 this.loadDataAsync(true); // reload child lists
 
             super.onChildEvent(childViewModel, e);
