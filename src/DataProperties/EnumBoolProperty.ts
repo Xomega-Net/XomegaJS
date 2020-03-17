@@ -1,5 +1,7 @@
 // Copyright (c) 2020 Xomega.Net. All rights reserved.
 
+/// <reference path="EnumProperty.ts"/>
+
 module xomega {
 
     // A subtype of enumeration properties where the items represent boolean values.
