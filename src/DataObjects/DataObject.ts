@@ -109,6 +109,7 @@ module xomega {
                 let dp: any = this[prop];
                 if (this.hasOwnProperty(prop) && dp && dp.reset) dp.reset();
             }
+            this.IsNew(true);
             this.ValidationErrors.Errors.removeAll();
         }
 

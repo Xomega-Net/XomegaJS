@@ -14,6 +14,8 @@ module xomega {
         protected activateAsync(params): JQueryPromise<boolean> {
             this._params = params || {};
             this.ActiveChildView(null); // reset active child
+            // initialize view title late to allow dependent objects to initialize
+            this.ViewTitle = ko.computed(this.getViewTitle, this);
             return $.when(true);
         }
 
@@ -27,6 +29,17 @@ module xomega {
         public canDeactivate(): JQueryPromise<boolean> {
             return $.when(this.canClose());
         }
+
+        // observable for the view title to display
+        public ViewTitle: KnockoutObservable<string>;
+
+        // Returns the current title of the view, which is based on the BaseTitle,
+        // and can include additional indicators of the view state, such as modification.
+        public getViewTitle(): string { return this.getBaseTitle(); }
+
+        // Base title of the view to be overridden in subclasses.
+        // The override can include additional data from the object.
+        protected getBaseTitle(): string { return 'View'; }
 
         private errorList: ErrorList = new ErrorList();
 

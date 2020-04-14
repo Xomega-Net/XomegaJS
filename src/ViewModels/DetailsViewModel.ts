@@ -27,6 +27,16 @@ module xomega {
             });
         }
 
+        // Override view title for modified and new objects.
+        public getViewTitle(): string {
+            let title: string = this.getBaseTitle();
+            if (this.DetailsObject.IsNew())
+                title = 'New ' + title;
+            if (this.DetailsObject.Modified())
+                title += '*';
+            return title;
+        }
+
         public getErrorList(): ErrorList { return this.DetailsObject ? this.DetailsObject.ValidationErrors : super.getErrorList(); }
 
         // Pops up a confirmation dialog for modified object before closing
