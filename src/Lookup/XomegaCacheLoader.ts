@@ -40,5 +40,5 @@ module xomega {
             $.ajax(req);
         }
     }
-    LookupCache.cacheLoaders.push(new XomegaCacheLoader());
+    LookupCache.current.cacheLoaders.push(new XomegaCacheLoader());
 }

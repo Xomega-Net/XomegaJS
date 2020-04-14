@@ -76,26 +76,16 @@ module xomega {
         // callback to update value list when lookup table is ready
         private updateList: (type: string) => void;
 
-        // An instance of local lookup table when the possible values are not globally cached,
-        // but depend on the current state of the data object.
-        private localLookupTable: LookupTable;
+        // Cache loader with a local cache to use as a list of possible values for this property.
+        public LocalCacheLoader: LocalLookupCacheLoader;
 
         // Gets the lookup table for the property. The default implementation uses the <see cref="EnumType"/>
         // to find the lookup table in the lookup cache specified by the <see cref="CacheType"/>.
         // <returns>The lookup table to be used for the property.</returns>
         protected getLookupTable(onReadyCallback?: (type: string) => void): LookupTable {
-            if (this.localLookupTable != null) return this.localLookupTable;
-            return LookupCache.current.getLookupTable(this.EnumType, onReadyCallback);
-        }
-
-        // Sets local lookup table for the property, blanks out the current value if it's not in the table
-        // and notifies listeners about updated value list
-        public setLookupTable(table: LookupTable) {
-            this.localLookupTable = table;
-            if (table && !table.lookupById(this.TransportValue()))
-                this.InternalValue(null);
-            else if (this.updateValue) this.updateValue(null);
-            if (this.updateValueList) this.updateValueList();
+            var cache = (this.LocalCacheLoader != null) ? this.LocalCacheLoader.getCache() : LookupCache.current;
+            var type = (this.LocalCacheLoader != null) ? this.LocalCacheLoader.TableType : this.EnumType;
+            return cache.getLookupTable(type, onReadyCallback);
         }
 
         // Converts a single value to a given format. For internal format
@@ -145,6 +135,56 @@ module xomega {
                 this.addWaitItem(this.updateList);
             }
             return res;
+        }
+
+        private cacheLoaderSources: Object = new Object();
+
+        // Sets a source data property for the specified input parameter of the local cache loader.
+        // The value of the input parameter will come from the source property, and the cache will be reloaded
+        // whenever the value of the source property changes.
+        public setCacheLoaderParameters(parameter: string, sourceProperty: DataProperty) {
+            var oldProp: CascadingProperty = this.cacheLoaderSources[parameter];
+            if (oldProp) {
+                oldProp.subscription.dispose();
+                delete this.cacheLoaderSources[parameter];
+            }
+
+            if (sourceProperty != null) {
+                this.cacheLoaderSources[parameter] = new CascadingProperty(sourceProperty,
+                    sourceProperty.InternalValue.subscribe(this.cacheLoaderParameterChange, this));
+            }
+        }
+
+        // Listens to the changes in values of the source parameter properties,
+        // reloads the local cache with the new parameters, clears any current values
+        // that are no longer match valid for the new cache. Also fires an event
+        // to notify the listeners that the list of possible values changed.
+        private cacheLoaderParameterChange() {
+            if (this.LocalCacheLoader == null) return;
+            var newParams = {};
+            for (var param in this.cacheLoaderSources) {
+                if (!this.cacheLoaderSources.hasOwnProperty(param) ||
+                    !(this.cacheLoaderSources[param] instanceof CascadingProperty)) continue;
+                newParams[param] = (<CascadingProperty>this.cacheLoaderSources[param]).property.TransportValue();
+            }
+            this.LocalCacheLoader.setParameters(newParams, () => {
+                this.clearInvalidValues();
+                this.updateValueList();
+            });
+        }
+
+        // Clears values that don't match the current value list
+        // without changing the modification state of the property.
+        public clearInvalidValues() {
+            if (this.isNull()) return;
+            var mod: boolean = this.Modified();
+            this.InternalValue(this.TransportValue());
+            if (this.IsMultiValued) {
+                var values: Array<Header> = this.InternalValue();
+                this.InternalValue(values.filter((h) => h.isValid));
+            } else if (!this.InternalValue().isValid)
+                this.InternalValue(null);
+            this.Modified(mod); // don't change the modified flag for initial load
         }
 
         // A dictionary that maps additional attributes that each possible value of this property may have

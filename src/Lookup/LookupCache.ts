@@ -8,8 +8,8 @@ module xomega {
         // Static current instance of the lookup cache.
         public static current: LookupCache = new LookupCache();
 
-        // Static list of registered lookup cache loaders.
-        public static cacheLoaders: Array<ILookupCacheLoader> = new Array<ILookupCacheLoader>();
+        // List of registered lookup cache loaders for this cache.
+        public cacheLoaders: Array<ILookupCacheLoader> = new Array<ILookupCacheLoader>();
 
         // A cache of lookup tables by type.
         private cache: any = {};
@@ -22,7 +22,7 @@ module xomega {
         private loadLookupTable(type: string, onReadyCallback: (type: string) => void) {
             // Protection from queuing up listeners for a table type that is not supported,
             // which will never be notified thereby creating a memory leak.
-            if (LookupCache.cacheLoaders.every(cl => !cl.isSupported(type))) {
+            if (this.cacheLoaders.every(cl => !cl.isSupported(type))) {
                 delete this.notifyQueues[type];
                 return;
             }
@@ -36,9 +36,9 @@ module xomega {
                 notify = new Array<(type: string) => void>();
                 if (onReadyCallback != null) notify.push(onReadyCallback);
                 this.notifyQueues[type] = notify;
-                for (var i = LookupCache.cacheLoaders.length - 1; i >= 0; i--)
-                    if (LookupCache.cacheLoaders[i].isSupported(type)) {
-                        LookupCache.cacheLoaders[i].load(this, type);
+                for (var i = this.cacheLoaders.length - 1; i >= 0; i--)
+                    if (this.cacheLoaders[i].isSupported(type)) {
+                        this.cacheLoaders[i].load(this, type);
                         return;
                     }
             }
