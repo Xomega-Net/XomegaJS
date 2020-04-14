@@ -222,6 +222,10 @@ module xomega {
         /// False if cascading value matches any value.
         public cascadingMatchNulls: boolean;
 
+        // True if null attribute value matches any value of the cascading property.
+        // False if null attribute value matches only null value of the cascading property.
+        public nullsMatchAnyCascading: boolean;
+
         // The method that determines if a given possible value matches the current values
         // of all cascading properties using the attribute specified for each property.
         // Cascading properties with blank values are ignored, i.e. a blank value
@@ -254,6 +258,7 @@ module xomega {
                         }).length > 0;
                     } else match = $.inArray(pv, hv) > -1;
                 } else if (hv) match = $.isArray(pv) ? $.inArray(hv, pv) > -1 : (hv == pv);
+                else if (this.nullsMatchAnyCascading) match = true;
                 else match = (pv == null);
 
                 if (!match) return false;
