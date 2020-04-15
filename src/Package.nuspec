@@ -1,15 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
     <metadata>
         <id>XomegaJS</id>
         <version>{version}</version>
         <authors>Xomega Team</authors>
         <owners>Xomega.Net</owners>
-        <licenseUrl>https://github.com/Xomega-Net/XomegaJS/blob/master/LICENSE.md</licenseUrl>
+        <license type="file">LICENSE.md</license>
+        <icon>Logo.png</icon>
         <projectUrl>https://github.com/Xomega-Net/XomegaJS</projectUrl>
-        <iconUrl>https://avatars2.githubusercontent.com/u/17077373</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Xomega JavaScript library for SPA projects, packaged along with typed definitions.</description>
+        <copyright>Copyright © Xomega.Net 2015-2020</copyright>
+        <repository url="https://github.com/Xomega-Net/XomegaJS" />
         <tags>Xomega TypeScript JavaScript</tags>
         <dependencies />
     </metadata>

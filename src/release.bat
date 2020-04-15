@@ -28,6 +28,8 @@ xcopy "bin\xomega.d.ts" "pkg\content\Scripts\typings\xomegajs\" >nul
 IF EXIST "pkg\XomegaJS.%VER%" rd /q /s "pkg\XomegaJS.%VER%"
 md "pkg\XomegaJS.%VER%"
 copy "bin\xomega.js" "pkg\content\Scripts\xomega-%VER%.js" >nul
+xcopy "..\LICENSE.md" "pkg\" >nul
+xcopy "..\Logo.png" "pkg\" >nul
 
 @powershell (Get-Content -raw Package.nuspec) -replace '{version}', '%VER%' -replace '.*^<dependencies.*', ^
 ((Get-Content -raw packages.config) -replace '^.\?.*\n', '' ^
@@ -37,6 +39,8 @@ copy "bin\xomega.js" "pkg\content\Scripts\xomega-%VER%.js" >nul
 %NUGET_PATH% pack "pkg\Package.nuspec" -OutputDirectory "pkg\XomegaJS.%VER%"
 
 rd /s /q pkg\content
+del pkg\LICENSE.md
+del pkg\Logo.png
 del pkg\Package.nuspec
 
 :end
