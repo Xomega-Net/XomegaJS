@@ -83,8 +83,25 @@ This operation cannot be undone.`)) return false;
             return this.DetailsObject ? this.DetailsObject.readAsync({ preserveSelection: preserveSelection }) : $.when(true);
         }
 
+        // Finds a child list for the child details view and updates its selected rows
+        // when the child details view is opened or closed.
+        protected updateDetailsSelection(dvm: DetailsViewModel, e: ViewEvent) {
+            let keys = this.DetailsObject.Properties.filter(p => p.IsKey);
+            let key = keys?.length ? <DataProperty>keys[0] : null;
+            let childKeys = dvm.DetailsObject.Properties.filter(p => p.IsKey && p.Name != key?.Name);
+            let childKey = childKeys?.length ? <DataProperty>childKeys[0] : null;
+            if (!childKey) return;
+            for (let prop in this.DetailsObject) {
+                let list = this.DetailsObject[prop];
+                if (list instanceof DataListObject)
+                    this.updateListSelection(list, childKey, e);
+            }
+        }
+
         // Default handler for saving or deleting of a child details view.
         protected onChildEvent(childViewModel: ViewModel, e: ViewEvent) {
+            if (childViewModel instanceof DetailsViewModel)
+                this.updateDetailsSelection(childViewModel, e);
             if (e.isSaved(false) || e.isDeleted(false))
                 this.loadDataAsync(true); // reload child lists
 

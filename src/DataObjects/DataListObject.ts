@@ -123,6 +123,11 @@ module xomega {
             return this.List().filter((r) => r._selected());
         }
 
+        public setSelectedRows(selRows: Array<DataRow>) {
+            this.clearSelectedRows();
+            if (selRows) selRows.forEach(r => r._selected(true));
+        }
+
         public clearSelectedRows() {
             this.getSelectedRows().forEach((r) => r._selected(false));
         }

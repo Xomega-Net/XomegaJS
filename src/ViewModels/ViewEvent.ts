@@ -7,17 +7,20 @@ module xomega {
         // A static constant representing a combination of all events.
         public static All: ViewEvent = new ViewEvent(0xFFFF);
 
+        // A static constant representing an Opened event
+        public static Opened: ViewEvent = new ViewEvent(1 << 0);
+
         // A static constant representing a Closed event
-        public static Closed: ViewEvent = new ViewEvent(1 << 0);
+        public static Closed: ViewEvent = new ViewEvent(1 << 1);
 
         // A static constant representing a Saved event
-        public static Saved: ViewEvent = new ViewEvent(1 << 1);
+        public static Saved: ViewEvent = new ViewEvent(1 << 2);
 
         // A static constant representing a Deleted event
-        public static Deleted: ViewEvent = new ViewEvent(1 << 2);
+        public static Deleted: ViewEvent = new ViewEvent(1 << 3);
 
         // A static constant representing a Child view event
-        public static Child: ViewEvent = new ViewEvent(1 << 3);
+        public static Child: ViewEvent = new ViewEvent(1 << 4);
 
         private events: number;
 
@@ -31,6 +34,11 @@ module xomega {
 
         // Returns an event that is this event with the provided event removed
         public without(viewEvent: ViewEvent): ViewEvent { return new ViewEvent(this.events & ~viewEvent.events); }
+
+        // Returns if the view was opened.
+        public isOpened(self: boolean = true): boolean {
+            return (self && !this.isChild() || !self) && (this.events & ViewEvent.Opened.events) > 0;
+        }
 
         // Returns if the view was closed.
         public isClosed(self: boolean = true): boolean {

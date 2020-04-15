@@ -113,8 +113,10 @@ module xomega {
 
         // Handles child closing or change to refresh the list.
         protected onChildEvent(childViewModel: ViewModel, e: ViewEvent) {
-            if (e.isClosed() && this.ListObject) {
-                this.ListObject.clearSelectedRows();
+            if (childViewModel instanceof DetailsViewModel) {
+                var childKeys = childViewModel.DetailsObject.Properties.filter(p => p.IsKey);
+                var key = childKeys?.length ? <DataProperty>childKeys[0] : null;
+                if (key) this.updateListSelection(this.ListObject, key, e);
             }
             if (e.isSaved(false) || e.isDeleted(false)) {
                 this.searchAsync(true);

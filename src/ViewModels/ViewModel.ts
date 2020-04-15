@@ -78,6 +78,7 @@ module xomega {
                             view.idPfx = vm.idPfx + idPfx;
                             vm.ActiveChildView(view);
                         }
+                        view.fireViewEvent(ViewEvent.Opened);
                         return true;
                     });
                 });
@@ -153,6 +154,24 @@ module xomega {
 
             if (e.isClosed() && childViewModel === this.ActiveChildView())
                 this.ActiveChildView(null);
+        }
+
+        // Updates selection in the specified list object for a details open/close event
+        // using the provided key property on the details view object.
+        protected updateListSelection(list: DataListObject, keyChildProp: DataProperty, e: ViewEvent): boolean {
+            // Find key property in the list with the same name, as the key property in the child details object.
+            var keyListProps = list?.Properties?.filter(p => p.IsKey && p.Name == keyChildProp?.Name);
+            if (keyListProps?.length) {
+                if (e.isOpened()) {
+                    var key = keyChildProp.TransportValue();
+                    var keyListProp: DataProperty = <DataProperty>keyListProps[0];
+                    var rows = list.List().filter(r => keyListProp.resolveValue(r[keyListProp.Name], ValueFormat.Transport) == key);
+                    list.setSelectedRows(rows);
+                } else if (e.isClosed())
+                    list.clearSelectedRows();
+                return true;
+            }
+            return false;
         }
    }
 }
