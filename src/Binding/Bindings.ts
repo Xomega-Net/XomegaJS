@@ -62,7 +62,7 @@ module xomega {
                         // make clickable and add a sort glyph
                         let el = $(element);
                         el.addClass('sortable');
-                        el.append("<i style='display: none' class='sort-glyph fa' aria-hidden='true'/>");
+                        el.append("<i style='display: none' class='sort-glyph fas' aria-hidden='true'/>");
 
                         // add glyph renderer
                         ko.computed(function () {
@@ -75,8 +75,8 @@ module xomega {
                             }
                             glyph.attr('style', 'display:' + (sc ? 'inline' : 'none'));
                             if (sc) {
-                                glyph.toggleClass('fa-long-arrow-up', sc.SortDirection == ListSortDirection.Ascending);
-                                glyph.toggleClass('fa-long-arrow-down', sc.SortDirection == ListSortDirection.Descending);
+                                glyph.toggleClass('fa-long-arrow-alt-up', sc.SortDirection == ListSortDirection.Ascending);
+                                glyph.toggleClass('fa-long-arrow-alt-down', sc.SortDirection == ListSortDirection.Descending);
                             }
                         });
                     }
