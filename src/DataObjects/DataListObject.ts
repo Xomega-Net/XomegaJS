@@ -14,16 +14,16 @@ module xomega {
         public CriteriaObject: CriteriaObject = null;
 
         // applied criteria
-        public AppliedCriteria: KnockoutObservableArray<FieldCriteria> = ko.observableArray<FieldCriteria>();
+        public AppliedCriteria: KnockoutObservableArray<FieldCriteriaDisplay> = ko.observableArray<FieldCriteriaDisplay>();
 
         public AppliedCriteriaText: KnockoutObservable<string> = ko.pureComputed(function () {
             let text: string = '';
             let crit = this.AppliedCriteria();
             if (!crit) return text;
             for (let i = 0; i < crit.length; i++) {
-                let fc: FieldCriteria = crit[i];
+                let fc: FieldCriteriaDisplay = crit[i];
                 if (text) text += '; ';
-                text += fc.Label + ':' + (fc.Operator ? ' ' + fc.Operator : '') + (fc.Data.length > 0 ? ' ' + fc.Data.join(' and ') : '');
+                text += fc.Label + ':' + (fc.Operator ? ' ' + fc.Operator : '') + (fc.Values.length > 0 ? ' ' + fc.Values.join(' and ') : '');
             }
             return text;
         }, this);
